@@ -26,5 +26,11 @@
         "48": "/images/get_started48.png",
         "128": "/images/get_started128.png"
     },
-    "options_page": "options.html"
+    "options_page": "options.html",
+    "content_scripts": [
+        {
+            "matches": ["https://awbw.amarriner.com/*"],
+            "js": ["content-script.js"]
+        }
+    ]
 }

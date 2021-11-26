@@ -4,10 +4,36 @@
         <link rel="stylesheet" href="button.css">
     </head>
     <body>
-        <div id="buttonDiv">
-        </div>
+        <form id="optionsForm">
+            <div>
+                <label for="rewind-turn">
+                    Rewind Turn
+                    <input type="textarea" readonly class="unselectable" name="rewind-turn" id="rewind-turn">
+                </label>
+            </div>
+            <div>
+                <label for="rewind-action">
+                    Rewind Action
+                    <input type="textarea" readonly class="unselectable" name="rewind-action" id="rewind-action">
+                </label>
+            </div>
+            <div>
+                <label for="forward-action">
+                    Forward Action
+                    <input type="textarea" readonly class="unselectable" name="forward-action" id="forward-action">
+                </label>
+            </div>
+            <div>
+                <label for="forward-turn">
+                    Forward Turn
+                    <input type="textarea" readonly class="unselectable" name="forward-turn" id="forward-turn">
+                </label>
+            </div>
+        </form>
         <div>
-            <p>Choose a different background color!</p>
+            <span id="keybind-instructions" class="keybind-instructions hidden">
+                Press the key that you want to bind for <span>Rewind Turn</span>
+            </span>
         </div>
         <script src="options.js"></script>
     </body>
