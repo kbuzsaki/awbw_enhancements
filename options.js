@@ -28,8 +28,8 @@ chrome.storage.sync.get({options: kDefaultOptions}, function(data) {
     Object.assign(options, data.options);
 });
 
-let KeybindListener = (function(){
-    let KeybindListener = function(id) {
+class KeybindListener {
+    constructor(id) {
         this.currentOption = undefined;
         this.keybindInstructions = document.getElementById(id);
         let that = this;
@@ -38,55 +38,49 @@ let KeybindListener = (function(){
                 that.handleEvent(event);
             }
         });
-    };
+    }
 
-    KeybindListener.prototype.isActive = function() {
-        return this.currentOption !== undefined;
-    };
+    isActive() { return this.currentOption !== undefined; }
 
-    KeybindListener.prototype.handleEvent = function(event) {
+    handleEvent(event) {
         console.log("Got keyCode:", event.keyCode,
             "(" + keyCodeToName(event.keyCode) + ") for option:", this.currentOption.optionId);
 
         let currentOption = this.currentOption;
         this.cancelListen();
         currentOption.handleKeybinding(event);
-    };
+    }
 
-    KeybindListener.prototype.listen = function(option) {
+    listen(option) {
         this.cancelListen();
         this.currentOption = option;
 
         let name = this.currentOption.name();
         this.keybindInstructions.getElementsByTagName("span")[0].innerHTML = name;
         this.keybindInstructions.classList.remove("hidden");
-    };
+    }
 
-    KeybindListener.prototype.cancelListen = function() {
+    cancelListen() {
         if (this.currentOption !== undefined) {
             this.currentOption.cancelListen();
         }
         this.currentOption = undefined;
         this.keybindInstructions.classList.add("hidden");
-    };
+    }
+}
 
-    return KeybindListener;
-})();
-
-let KeybindOption = (function(){
-    let KeybindOption = function(optionId, keybindListener){
+class KeybindOption {
+    constructor(optionId, keybindListener){
         this.optionId = optionId;
         this.keybindListener = keybindListener;
 
         this.input = document.getElementById(this.optionId);
         this.input.addEventListener("click", (event) => { this.onClick(event); });
-    };
+    }
 
-    KeybindOption.prototype.name = function() {
-        return this.optionId;
-    };
+    name() { return this.optionId; }
 
-    KeybindOption.prototype.onClick = function(event) {
+    onClick(event) {
         console.log("clicked:", this.optionId);
 
         if (this.keybindListener.currentOption === this) {
@@ -94,27 +88,25 @@ let KeybindOption = (function(){
         } else {
             this.startListen();
         }
-    };
+    }
 
-    KeybindOption.prototype.startListen = function() {
+    startListen() {
         this.input.classList.add("listening");
         this.keybindListener.listen(this);
-    };
+    }
 
-    KeybindOption.prototype.cancelListen = function() {
+    cancelListen() {
         this.input.classList.remove("listening");
-    };
+    }
 
-    KeybindOption.prototype.handleKeybinding = function(event) {
+    handleKeybinding(event) {
         console.log("event delivered to option: ", this.optionId);
-    };
+    }
 
-    KeybindOption.prototype.setDisplayedBindings = function(bindings) {
+    setDisplayedBindings(bindings) {
         let text = "";
-    };
-
-    return KeybindOption;
-})();
+    }
+}
 
 
 let keybindListener = new KeybindListener("keybind-instructions");
