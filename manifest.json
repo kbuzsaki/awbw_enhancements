@@ -30,7 +30,7 @@
     "content_scripts": [
         {
             "matches": ["https://awbw.amarriner.com/*"],
-            "js": ["content-script.js"]
+            "js": ["replay_shortcuts_script.js"]
         }
     ]
 }

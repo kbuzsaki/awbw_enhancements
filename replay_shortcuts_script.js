@@ -1,4 +1,3 @@
-
 const kDefaultBindings = {
     "rewind-turn": [72 /*h*/, 38 /*up*/],
     "rewind-action": [75 /*k*/, 37 /*left*/],
