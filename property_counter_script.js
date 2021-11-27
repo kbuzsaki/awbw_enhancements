@@ -262,6 +262,8 @@ if (gamemap !== undefined) {
                     users_username: country.name,
                     players_id: 0,
                     co_name: "Andy",
+                    co_max_power: 270000,
+                    co_max_spower: 540000,
                     players_funds: funds,
                     countries_code: country.code,
                     countries_name: country.name,
