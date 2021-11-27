@@ -1,7 +1,3 @@
-// TODO: track clicks on the build menu for funds deduction?
-// TODO: how to refund them for mistaken purchases? undo last purchase button + stack?
-// TODO: button for incrementing income
-
 /*
 {
     "users_username": "saltor",
