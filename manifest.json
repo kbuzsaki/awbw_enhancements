@@ -39,6 +39,7 @@
                 "lib/game_data.js",
                 "lib/game_state_parser.js",
                 "lib/player_panel.js",
+                "lib/players_panel.js",
                 "lib/update_throttler.js",
                 "replay_shortcuts_script.js",
                 "property_counter_script.js"

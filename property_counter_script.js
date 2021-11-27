@@ -111,31 +111,11 @@ if (gamemap !== undefined) {
     let removedUnitsPanel = document.getElementById("planner_removed_units");
     if (removedUnitsPanel) {
         let mapEntities = parser.parseMapEntities();
-
         let players = getInitialPlayerState(mapEntities);
 
-        let playerInfoContainer = htmlToNode(`<div class="game-player-info" style="height: 160px; flex-wrap: nowrap; left: 100%; position: static; margin-left: 20px; overflow-y: visible; width: auto;">`);
-        removedUnitsPanel.appendChild(playerInfoContainer);
-
-        let playerPanels = {};
-        for (let playerInfo of players) {
-            let playerPanel = new PlayerPanel(playerInfoContainer, playerInfo);
-            playerPanels[playerInfo.countries_code] = playerPanel;
-        }
-
+        let playersPanel = new PlayersPanel(removedUnitsPanel, players);
         parser.addListener((mapEntities) => {
-            let propertiesByCountry =
-                partitionBy(mapEntities.properties, (property) => property.country.code);
-            let unitsByCountry =
-                partitionBy(mapEntities.units, (unit) => unit.country.code);
-
-            for (let playerId in playerPanels) {
-                let playerPanel = playerPanels[playerId];
-                let countryCode = playerPanel.playerInfo.countries_code;
-                let properties = propertiesByCountry[countryCode] || [];
-                let units = unitsByCountry[countryCode] || [];
-                playerPanel.setMapInfo(properties, units);
-            }
+            playersPanel.handleUpdate(mapEntities);
         });
     }
 
