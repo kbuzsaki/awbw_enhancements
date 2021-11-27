@@ -9,11 +9,18 @@ const kSpecialNeutralTiles = [
   "vpipeseam",
 ];
 function parseCountryFromId(id) {
+    // Special "property" tiles don't have a country
     if (kSpecialNeutralTiles.indexOf(id) !== -1) {
         let country = kCountries[0];
         let remainder = id;
         return {country, remainder};
     }
+
+    // Waited units have the "gs_" prefix on their images?
+    if (id.startsWith("gs_")) {
+        id = id.substr(3);
+    }
+
     for (let country of kCountries) {
         if (id.startsWith(country.code)) {
             let remainder = id.substr(country.code.length);
@@ -68,6 +75,14 @@ class Unit {
         }
 
         return new Unit(country, remainder, hp, others);
+    }
+
+    unitData() {
+        return kUnitsByName[this.unit];
+    }
+
+    unitValue() {
+        return this.unitData().cost * (parseInt(this.hp) / 10);
     }
 }
 
@@ -165,15 +180,11 @@ class PropertyStatsPanel {
     updateWithEntities(mapEntities) {
         console.log("map entities:", mapEntities);
 
-        let propertiesByCountry = {};
-        for (let property of mapEntities.properties) {
-            if (!propertiesByCountry.hasOwnProperty(property.country.code)) {
-                propertiesByCountry[property.country.code] = [];
-            }
-            propertiesByCountry[property.country.code].push(property);
-        }
-
-        console.log("properties by country: ", propertiesByCountry);
+        let propertiesByCountry =
+            partitionBy(mapEntities.properties, (property) => property.country.code);
+        let unitsByCountry =
+            partitionBy(mapEntities.units, (unit) => unit.country.code);
+        console.log("by country:", propertiesByCountry, unitsByCountry);
     }
 }
 
@@ -209,20 +220,10 @@ if (gamemap !== undefined) {
         }
 
         parser.addListener((mapEntities) => {
-            let propertiesByCountry = {};
-            for (let property of mapEntities.properties) {
-                if (!propertiesByCountry.hasOwnProperty(property.country.code)) {
-                    propertiesByCountry[property.country.code] = [];
-                }
-                propertiesByCountry[property.country.code].push(property);
-            }
-            let unitsByCountry = {};
-            for (let unit of mapEntities.units) {
-                if (!unitsByCountry.hasOwnProperty(unit.country.code)) {
-                    unitsByCountry[unit.country.code] = [];
-                }
-                unitsByCountry[unit.country.code].push(unit);
-            }
+            let propertiesByCountry =
+                partitionBy(mapEntities.properties, (property) => property.country.code);
+            let unitsByCountry =
+                partitionBy(mapEntities.units, (unit) => unit.country.code);
 
             for (let playerId in playerPanels) {
                 let playerPanel = playerPanels[playerId];
