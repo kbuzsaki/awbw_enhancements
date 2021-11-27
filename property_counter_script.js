@@ -1,28 +1,39 @@
 const kCountries = [
-    {code: "os", flatName: "orangestar"},
-    {code: "bm", flatName: "bluemoon"},
-    {code: "ge", flatName: "greenearth"},
-    {code: "yc", flatName: "yellowcomet"},
-    {code: "bh", flatName: "blackhole"},
-    {code: "rf", flatName: "redfire"},
-    {code: "gs", flatName: "greysky"},
-    {code: "bd", flatName: "browndesert"},
-    {code: "ab", flatName: "amberblaze"},
-    {code: "js", flatName: "jadesun"},
-    {code: "ci", flatName: "cobaltice"},
-    {code: "pc", flatName: "pinkcosmos"},
-    {code: "tg", flatName: "tealgalaxy"},
-    {code: "pl", flatName: "purplelightning"},
-    {code: "ar", flatName: "acidrain"},
-    {code: "wn", flatName: "whitenova"},
-    {code: "??", flatName: "neutral"},
+    {turnOrder: 0,  code: "??", flatName: "neutral"},
+    {turnOrder: 1,  code: "os", flatName: "orangestar"},
+    {turnOrder: 2,  code: "bm", flatName: "bluemoon"},
+    {turnOrder: 3,  code: "ge", flatName: "greenearth"},
+    {turnOrder: 4,  code: "yc", flatName: "yellowcomet"},
+    {turnOrder: 5,  code: "bh", flatName: "blackhole"},
+    {turnOrder: 6,  code: "rf", flatName: "redfire"},
+    {turnOrder: 7,  code: "gs", flatName: "greysky"},
+    {turnOrder: 8,  code: "bd", flatName: "browndesert"},
+    {turnOrder: 9,  code: "ab", flatName: "amberblaze"},
+    {turnOrder: 10, code: "js", flatName: "jadesun"},
+    {turnOrder: 11, code: "ci", flatName: "cobaltice"},
+    {turnOrder: 12, code: "pc", flatName: "pinkcosmos"},
+    {turnOrder: 13, code: "tg", flatName: "tealgalaxy"},
+    {turnOrder: 14, code: "pl", flatName: "purplelightning"},
+    {turnOrder: 15, code: "ar", flatName: "acidrain"},
+    {turnOrder: 16, code: "wn", flatName: "whitenova"},
 ];
 
 function parseIdFromResourceUrl(url) {
     return url.split("/").at(-1).split(".").at(0);
 }
 
+const kSpecialNeutralTiles = [
+  "missilesilo",
+  "missilesiloempty",
+  "hpipeseam",
+  "vpipeseam",
+];
 function parseCountryFromId(id) {
+    if (kSpecialNeutralTiles.indexOf(id) !== -1) {
+        let country = kCountries[0];
+        let remainder = id;
+        return {country, remainder};
+    }
     for (let country of kCountries) {
         if (id.startsWith(country.code)) {
             let remainder = id.substr(country.code.length);
@@ -45,6 +56,10 @@ class Property {
         let id = parseIdFromResourceUrl(src);
         let {country, remainder} = parseCountryFromId(id);
         return new Property(country, remainder);
+    }
+
+    producesIncome() {
+        return ["hq", "city", "base", "airport", "port"].indexOf(this.tile) !== -1;
     }
 }
 
@@ -79,6 +94,18 @@ class Unit {
 class GameStateParser {
     constructor(gamemap) {
         this.gamemap = gamemap;
+        this.listeners = [];
+    }
+
+    addListener(listener) {
+        this.listeners.push(listener);
+    }
+
+    handleMapUpdate() {
+        let mapEntities = this.parseMapEntities();
+        for (let listener of this.listeners) {
+            listener(mapEntities);
+        }
     }
 
     parseMapEntities() {
@@ -125,18 +152,107 @@ class GameStateParser {
 
         return mapEntities;
     }
+}
 
-    handleMapUpdate() {
-        let mapEntities = this.parseMapEntities();
+const kBaseTable = `
+<table width="100%" style="margin-top: 10px"><tbody><tr>
+  <td class="bordertitle" height="25" width="100%" style="font-size: 16px;">
+    <!--
+    <div class="reverse-info-box">?
+      <span class="info-box-text" style="top: 20px;">
+        Click on a unit to put<br> it back from where<br> it was removed
+      </span>
+    </div>
+    -->
+    <b>Properties</b>
+  </td>
+</tr><tr>
+  <td class="borderwhite" width="100%" style="padding-top: 5px;">
+  </td>
+</tr></tbody></table>`;
+
+class PropertyStatsPanel {
+    constructor(parentPanel) {
+        this.parentPanel = parentPanel;
+
+        /*
+        let placeholder = document.createElement("html");
+        placeholder.innerHTML += kBaseTable;
+        this.parentPanel.appendChild(placeholder.getElementsByTagName("table")[0]);
+        */
+    }
+
+    updateWithEntities(mapEntities) {
         console.log("map entities:", mapEntities);
+
+        let propertiesByCountry = {};
+        for (let property of mapEntities.properties) {
+            if (!propertiesByCountry.hasOwnProperty(property.country.code)) {
+                propertiesByCountry[property.country.code] = [];
+            }
+            propertiesByCountry[property.country.code].push(property);
+        }
+
+        console.log("properties by country: ", propertiesByCountry);
     }
 }
+
+// TODO: track clicks on the build menu for funds deduction?
+// TODO: how to refund them for mistaken purchases? undo last purchase button + stack?
+// TODO: button for incrementing income
 
 
 let gamemap = document.getElementById("gamemap");
 if (gamemap !== undefined) {
     let parser = new GameStateParser(gamemap);
-    parser.handleMapUpdate();
+
+    let removedUnitsPanel = document.getElementById("planner_removed_units");
+    if (removedUnitsPanel !== undefined) {
+        let statsPanel = new PropertyStatsPanel(removedUnitsPanel);
+        parser.addListener((mapEntities) => {
+            statsPanel.updateWithEntities(mapEntities);
+        });
+
+        let playersInfo = scrapePlayersInfo();
+        console.log(playersInfo);
+        let players = Object.values(playersInfo).sort(
+            (lhs, rhs) => lhs.players_order - rhs.players_order);
+        console.log(players);
+
+        let playerInfoContainer = htmlToNode(`<div class="game-player-info" style="height: 160px; flex-wrap: nowrap; left: 100%; position: static; margin-left: 20px; overflow-y: visible; width: auto;">`);
+        removedUnitsPanel.appendChild(playerInfoContainer);
+
+        let playerPanels = {};
+        for (let playerInfo of players) {
+            let playerPanel = new PlayerPanel(playerInfoContainer, playerInfo);
+            playerPanels[playerInfo.countries_code] = playerPanel;
+        }
+
+        parser.addListener((mapEntities) => {
+            let propertiesByCountry = {};
+            for (let property of mapEntities.properties) {
+                if (!propertiesByCountry.hasOwnProperty(property.country.code)) {
+                    propertiesByCountry[property.country.code] = [];
+                }
+                propertiesByCountry[property.country.code].push(property);
+            }
+            let unitsByCountry = {};
+            for (let unit of mapEntities.units) {
+                if (!unitsByCountry.hasOwnProperty(unit.country.code)) {
+                    unitsByCountry[unit.country.code] = [];
+                }
+                unitsByCountry[unit.country.code].push(unit);
+            }
+
+            for (let playerId in playerPanels) {
+                let playerPanel = playerPanels[playerId];
+                let countryCode = playerPanel.playerInfo.countries_code;
+                let properties = propertiesByCountry[countryCode] || [];
+                let units = unitsByCountry[countryCode] || [];
+                playerPanel.setMapInfo(properties, units);
+            }
+        });
+    }
 
     let throttler = new UpdateThrottler(kDefaultThrottleMs, () => {
         parser.handleMapUpdate();
@@ -146,5 +262,8 @@ if (gamemap !== undefined) {
         throttler.handleUpdate();
     });
     observer.observe(gamemap, {subtree: true, childList: true, attributes: true});
+
+    // Initial ping to grab state if there are no other events
+    throttler.handleUpdate();
 }
 

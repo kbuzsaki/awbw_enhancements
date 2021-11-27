@@ -11,6 +11,9 @@
         "scripting",
         "storage"
     ],
+    "host_permissions": [
+        "https://awbw.amarriner.com/*"
+    ],
     "action": {
         "default_popup": "popup.html",
         "default_icon": {
@@ -30,7 +33,10 @@
     "content_scripts": [
         {
             "matches": ["https://awbw.amarriner.com/*"],
+            "css": ["awbw_helper.css"],
             "js": [
+                "lib/player_panel.js",
+                "lib/util.js",
                 "lib/update_throttler.js",
                 "replay_shortcuts_script.js",
                 "property_counter_script.js"
