@@ -35,8 +35,9 @@
             "matches": ["https://awbw.amarriner.com/*"],
             "css": ["awbw_helper.css"],
             "js": [
-                "lib/player_panel.js",
                 "lib/util.js",
+                "lib/game_data.js",
+                "lib/player_panel.js",
                 "lib/update_throttler.js",
                 "replay_shortcuts_script.js",
                 "property_counter_script.js"
