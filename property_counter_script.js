@@ -150,44 +150,6 @@ class GameStateParser {
     }
 }
 
-const kBaseTable = `
-<table width="100%" style="margin-top: 10px"><tbody><tr>
-  <td class="bordertitle" height="25" width="100%" style="font-size: 16px;">
-    <!--
-    <div class="reverse-info-box">?
-      <span class="info-box-text" style="top: 20px;">
-        Click on a unit to put<br> it back from where<br> it was removed
-      </span>
-    </div>
-    -->
-    <b>Properties</b>
-  </td>
-</tr><tr>
-  <td class="borderwhite" width="100%" style="padding-top: 5px;">
-  </td>
-</tr></tbody></table>`;
-
-class PropertyStatsPanel {
-    constructor(parentPanel) {
-        this.parentPanel = parentPanel;
-
-        /*
-        let placeholder = document.createElement("html");
-        placeholder.innerHTML += kBaseTable;
-        this.parentPanel.appendChild(placeholder.getElementsByTagName("table")[0]);
-        */
-    }
-
-    updateWithEntities(mapEntities) {
-        console.log("map entities:", mapEntities);
-
-        let propertiesByCountry =
-            partitionBy(mapEntities.properties, (property) => property.country.code);
-        let unitsByCountry =
-            partitionBy(mapEntities.units, (unit) => unit.country.code);
-        console.log("by country:", propertiesByCountry, unitsByCountry);
-    }
-}
 
 // TODO: track clicks on the build menu for funds deduction?
 // TODO: how to refund them for mistaken purchases? undo last purchase button + stack?
@@ -233,11 +195,6 @@ if (gamemap !== undefined) {
 
     let removedUnitsPanel = document.getElementById("planner_removed_units");
     if (removedUnitsPanel) {
-        let statsPanel = new PropertyStatsPanel(removedUnitsPanel);
-        parser.addListener((mapEntities) => {
-            statsPanel.updateWithEntities(mapEntities);
-        });
-
         let mapEntities = parser.parseMapEntities();
         let propertiesByCountry =
             partitionBy(mapEntities.properties, (property) => property.country.code);
