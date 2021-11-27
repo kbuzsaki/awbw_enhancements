@@ -83,15 +83,15 @@ function getInitialPlayerState(mapEntities) {
         fundsPerProperty = kDefaultFundingLevel;
 
         let isFirst = true;
-        for (let countryCode in propertiesByCountry) {
-            let country = kCountriesByCode[countryCode];
-            if (country.flatName == "neutral") {
+        for (let country of kCountries) {
+            if (country.flatName === "neutral"
+             || !propertiesByCountry.hasOwnProperty(country.code)) {
                 continue;
             }
 
             let funds = 0;
             if (isFirst) {
-                let properties = propertiesByCountry[countryCode];
+                let properties = propertiesByCountry[country.code];
                 let incomeProperties = properties.filter((p) => p.producesIncome()).length;
                 funds = incomeProperties * fundsPerProperty;
             }
