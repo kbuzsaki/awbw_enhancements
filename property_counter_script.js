@@ -193,40 +193,6 @@ class PropertyStatsPanel {
 // TODO: how to refund them for mistaken purchases? undo last purchase button + stack?
 // TODO: button for incrementing income
 
-
-let gamemap = document.getElementById("gamemap");
-if (gamemap !== undefined) {
-    let parser = new GameStateParser(gamemap);
-
-    let removedUnitsPanel = document.getElementById("planner_removed_units");
-    if (removedUnitsPanel !== undefined) {
-        let statsPanel = new PropertyStatsPanel(removedUnitsPanel);
-        parser.addListener((mapEntities) => {
-            statsPanel.updateWithEntities(mapEntities);
-        });
-
-        let players = scrapePlayersInfo();
-        if (players.length === 0) {
-            let mapEntities = parser.parseMapEntities();
-            let propertiesByCountry =
-                partitionBy(mapEntities.properties, (property) => property.country.code);
-            for (let countryCode in propertiesByCountry) {
-                let country = kCountriesByCode[countryCode];
-                if (country.flatName == "neutral") {
-                    continue;
-                }
-
-                players.push({
-                    users_username: country.name,
-                    players_id: 0,
-                    co_name: "Andy",
-                    players_funds: 0,
-                    countries_code: country.code,
-                    countries_name: country.name,
-                });
-            }
-        }
-
 /*
 {
     "users_username": "saltor",
@@ -256,6 +222,67 @@ if (gamemap !== undefined) {
     "players_income": 11000
 }
  */
+
+
+let gamemap = document.getElementById("gamemap");
+if (gamemap !== undefined) {
+    let parser = new GameStateParser(gamemap);
+
+    let removedUnitsPanel = document.getElementById("planner_removed_units");
+    if (removedUnitsPanel) {
+        let statsPanel = new PropertyStatsPanel(removedUnitsPanel);
+        parser.addListener((mapEntities) => {
+            statsPanel.updateWithEntities(mapEntities);
+        });
+
+        let players = scrapePlayersInfo();
+        // If there's no player data, fabricate some based on the predeployed properties.
+        if (players.length === 0) {
+            let mapEntities = parser.parseMapEntities();
+            let propertiesByCountry =
+                partitionBy(mapEntities.properties, (property) => property.country.code);
+
+            let isFirst = true;
+            for (let countryCode in propertiesByCountry) {
+                let country = kCountriesByCode[countryCode];
+                if (country.flatName == "neutral") {
+                    continue;
+                }
+
+                let funds = 0;
+                if (isFirst) {
+                    for (let property of propertiesByCountry[countryCode]) {
+                        if (property.producesIncome()) {
+                            funds += 1000;
+                        }
+                    }
+                }
+
+                players.push({
+                    users_username: country.name,
+                    players_id: 0,
+                    co_name: "Andy",
+                    players_funds: funds,
+                    countries_code: country.code,
+                    countries_name: country.name,
+                    is_current_turn: isFirst,
+                });
+
+                isFirst = false;
+            }
+        } else {
+            let latestPlayer = undefined;
+            let latestPlayerStartTime = 0;
+            for (let playerInfo of players) {
+                let startTime = Date.parse(playerInfo.players_turn_start);
+                if (startTime > latestPlayerStartTime) {
+                    latestPlayer = playerInfo;
+                    latestPlayerStart = startTime;
+                }
+                playerInfo.is_current_turn = false;
+            }
+            latestPlayer.is_current_turn = true;
+        }
 
         let playerInfoContainer = htmlToNode(`<div class="game-player-info" style="height: 160px; flex-wrap: nowrap; left: 100%; position: static; margin-left: 20px; overflow-y: visible; width: auto;">`);
         removedUnitsPanel.appendChild(playerInfoContainer);
