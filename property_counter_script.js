@@ -239,8 +239,18 @@ if (gamemap !== undefined) {
         parser.handleMapUpdate();
     });
     let observer = new MutationObserver((mutations, observer) => {
-        // TODO: filter out cursor-only updates? they're useful for debugging
-        throttler.handleUpdate();
+        // Ignore cursor-only mutations, they can't affect game state.
+        let isInteresting = false;
+        for (let mutation of mutations) {
+            if (mutation.target.id != "cursor") {
+                isInteresting = true;
+                break;
+            }
+        }
+
+        if (isInteresting) {
+            throttler.handleUpdate();
+        }
     });
     observer.observe(gamemap, {subtree: true, childList: true, attributes: true});
 
