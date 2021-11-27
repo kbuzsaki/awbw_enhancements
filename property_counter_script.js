@@ -82,6 +82,7 @@ class Unit {
     }
 
     unitValue() {
+        // TODO: handle unit value for colin / kanbei / hachi
         return this.unitData().cost * (parseInt(this.hp) / 10);
     }
 }
@@ -204,11 +205,57 @@ if (gamemap !== undefined) {
             statsPanel.updateWithEntities(mapEntities);
         });
 
-        let playersInfo = scrapePlayersInfo();
-        console.log(playersInfo);
-        let players = Object.values(playersInfo).sort(
-            (lhs, rhs) => lhs.players_order - rhs.players_order);
-        console.log(players);
+        let players = scrapePlayersInfo();
+        if (players.length === 0) {
+            let mapEntities = parser.parseMapEntities();
+            let propertiesByCountry =
+                partitionBy(mapEntities.properties, (property) => property.country.code);
+            for (let countryCode in propertiesByCountry) {
+                let country = kCountriesByCode[countryCode];
+                if (country.flatName == "neutral") {
+                    continue;
+                }
+
+                players.push({
+                    users_username: country.name,
+                    players_id: 0,
+                    co_name: "Andy",
+                    players_funds: 0,
+                    countries_code: country.code,
+                    countries_name: country.name,
+                });
+            }
+        }
+
+/*
+{
+    "users_username": "saltor",
+    "players_id": 1299238,
+    "players_team": "1299238",
+    "players_countries_id": 1,
+    "players_eliminated": "N",
+    "players_co_id": 22,
+    "co_name": "Jake",
+    "co_max_power": 270000,
+    "co_max_spower": 540000,
+    "players_co_power": 0,
+    "players_co_power_on": "N",
+    "players_co_max_power": 270000,
+    "players_co_max_spower": 540000,
+    "players_co_image": "jake.png",
+    "players_funds": 11000,
+    "countries_code": "os",
+    "countries_name": "Orange Star",
+    "cities": 8,
+    "labs": 0,
+    "towers": 0,
+    "other_buildings": 11,
+    "players_turn_clock": 1896396,
+    "players_turn_start": "2021-11-25 19:56:14",
+    "players_order": 19,
+    "players_income": 11000
+}
+ */
 
         let playerInfoContainer = htmlToNode(`<div class="game-player-info" style="height: 160px; flex-wrap: nowrap; left: 100%; position: static; margin-left: 20px; overflow-y: visible; width: auto;">`);
         removedUnitsPanel.appendChild(playerInfoContainer);
