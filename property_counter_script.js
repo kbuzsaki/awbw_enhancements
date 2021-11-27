@@ -224,6 +224,9 @@ class PropertyStatsPanel {
  */
 
 
+// Initialize to undefined to catch illegal use before we initialize it properly.
+let fundsPerProperty = undefined;
+
 let gamemap = document.getElementById("gamemap");
 if (gamemap !== undefined) {
     let parser = new GameStateParser(gamemap);
@@ -235,12 +238,37 @@ if (gamemap !== undefined) {
             statsPanel.updateWithEntities(mapEntities);
         });
 
+        let mapEntities = parser.parseMapEntities();
+        let propertiesByCountry =
+            partitionBy(mapEntities.properties, (property) => property.country.code);
+
         let players = scrapePlayersInfo();
-        // If there's no player data, fabricate some based on the predeployed properties.
-        if (players.length === 0) {
-            let mapEntities = parser.parseMapEntities();
-            let propertiesByCountry =
-                partitionBy(mapEntities.properties, (property) => property.country.code);
+        if (players.length !== 0) {
+            let latestPlayer = undefined;
+            let latestPlayerStartTime = 0;
+            for (let playerInfo of players) {
+                let startTime = Date.parse(playerInfo.players_turn_start);
+                if (startTime > latestPlayerStartTime) {
+                    latestPlayer = playerInfo;
+                    latestPlayerStart = startTime;
+                }
+                playerInfo.is_current_turn = false;
+
+                // If income is set and non-zero, try to infer the funding level
+                if (playerInfo.players_income && !fundsPerProperty) {
+                    let properties = propertiesByCountry[playerInfo.countries_code];
+                    let incomeProperties = properties.filter((p) => p.producesIncome()).length;
+                    fundsPerProperty = playerInfo.players_income / incomeProperties;
+                }
+            }
+            latestPlayer.is_current_turn = true;
+
+            if (!fundsPerProperty) {
+                fundsPerProperty = kDefaultFundingLevel;
+            }
+        } else {
+            // If there's no player data, fabricate some based on the predeployed properties.
+            fundsPerProperty = kDefaultFundingLevel;
 
             let isFirst = true;
             for (let countryCode in propertiesByCountry) {
@@ -251,11 +279,9 @@ if (gamemap !== undefined) {
 
                 let funds = 0;
                 if (isFirst) {
-                    for (let property of propertiesByCountry[countryCode]) {
-                        if (property.producesIncome()) {
-                            funds += 1000;
-                        }
-                    }
+                    let properties = propertiesByCountry[countryCode];
+                    let incomeProperties = properties.filter((p) => p.producesIncome()).length;
+                    funds = incomeProperties * fundsPerProperty;
                 }
 
                 players.push({
@@ -272,18 +298,6 @@ if (gamemap !== undefined) {
 
                 isFirst = false;
             }
-        } else {
-            let latestPlayer = undefined;
-            let latestPlayerStartTime = 0;
-            for (let playerInfo of players) {
-                let startTime = Date.parse(playerInfo.players_turn_start);
-                if (startTime > latestPlayerStartTime) {
-                    latestPlayer = playerInfo;
-                    latestPlayerStart = startTime;
-                }
-                playerInfo.is_current_turn = false;
-            }
-            latestPlayer.is_current_turn = true;
         }
 
         let playerInfoContainer = htmlToNode(`<div class="game-player-info" style="height: 160px; flex-wrap: nowrap; left: 100%; position: static; margin-left: 20px; overflow-y: visible; width: auto;">`);
