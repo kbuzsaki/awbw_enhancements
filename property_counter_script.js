@@ -122,6 +122,18 @@ if (gamemap !== undefined) {
         buildMenuListener.addUnitBuildListener((property, builtUnit) => {
             playersPanel.handleUnitBuilt(property, builtUnit);
         });
+
+        let loadStateInput = document.getElementById("load-state-input");
+        loadStateInput.addEventListener("change", () => {
+            let file = loadStateInput.files[0];
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                let savestateData = JSON.parse(event.target.result);
+                console.log("savestate loaded:", savestateData);
+            };
+            reader.readAsText(file);
+        });
     }
 
     let throttler = new UpdateThrottler(kDefaultThrottleMs, () => {
