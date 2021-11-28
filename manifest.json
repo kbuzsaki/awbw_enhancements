@@ -15,15 +15,6 @@
     "host_permissions": [
         "https://awbw.amarriner.com/*"
     ],
-    "action": {
-        "default_popup": "popup.html",
-        "default_icon": {
-            "16": "/images/fighter_icon16.png",
-            "32": "/images/fighter_icon32.png",
-            "48": "/images/fighter_icon48.png",
-            "128": "/images/fighter_icon128.png"
-        }
-    },
     "icons": {
         "16": "/images/fighter_icon16.png",
         "32": "/images/fighter_icon32.png",
