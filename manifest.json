@@ -42,6 +42,7 @@
                 "lib/build_menu_listener.js",
                 "lib/player_panel.js",
                 "lib/players_panel.js",
+                "lib/savestate_interceptor.js",
                 "lib/update_throttler.js",
                 "replay_shortcuts_script.js",
                 "property_counter_script.js"
