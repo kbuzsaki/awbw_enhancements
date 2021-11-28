@@ -124,7 +124,7 @@ if (gamemap !== undefined) {
         });
 
         let loadStateInput = document.getElementById("load-state-input");
-        let savestateInterceptor = new SavestateInterceptor(loadStateInput);
+        let savestateInterceptor = new SavestateInterceptor(loadStateInput, [playersPanel]);
     }
 
     let throttler = new UpdateThrottler(kDefaultThrottleMs, () => {
