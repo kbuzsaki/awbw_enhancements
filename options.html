@@ -1,40 +1,108 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" href="button.css">
-    </head>
-    <body>
-        <form id="optionsForm">
-            <div>
-                <label for="rewind-turn">
-                    Rewind Turn
-                    <input type="textarea" readonly class="unselectable" name="rewind-turn" id="rewind-turn">
-                </label>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AWBW Helper Options</title>
+    <link rel="stylesheet" href="res/bootstrap.min.css">
+    <script src="res/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>AWBW Helper Options</h1>
+      <form id="optionsForm" action="#">
+        <h2 class="mt-3">Replay Keyboard Shortcuts</h2>
+        <div class="row mb-3">
+          <div class="col">
+            <div class="form-check">
+              <input type="checkbox" checked class="form-check-input"
+                     id="enable-replay-shortcuts">
+              <label for="enable-replay-shortcuts" class="form-check-label">
+                Enable Replay Keyboard Shortcuts
+              </label>
             </div>
-            <div>
-                <label for="rewind-action">
-                    Rewind Action
-                    <input type="textarea" readonly class="unselectable" name="rewind-action" id="rewind-action">
-                </label>
-            </div>
-            <div>
-                <label for="forward-action">
-                    Forward Action
-                    <input type="textarea" readonly class="unselectable" name="forward-action" id="forward-action">
-                </label>
-            </div>
-            <div>
-                <label for="forward-turn">
-                    Forward Turn
-                    <input type="textarea" readonly class="unselectable" name="forward-turn" id="forward-turn">
-                </label>
-            </div>
-        </form>
-        <div>
-            <span id="keybind-instructions" class="keybind-instructions hidden">
-                Press the key that you want to bind for <span>Rewind Turn</span>
-            </span>
+          </div>
+          <div class="form-text">
+            Use the keyboard to navigate forward and backward in replays rather than
+            having to click the buttons.
+          </div>
         </div>
-        <script src="options.js"></script>
-    </body>
+        <div class="row mb-3">
+          <label for="rewind-turn" class="col-sm-3 col-lg-2 col-form-label">
+            Rewind Turn
+          </label>
+          <div class="col">
+            <input type="text" readonly class="form-control" id="rewind-turn">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="rewind-action" class="col-sm-3 col-lg-2 col-form-label">
+            Rewind Action
+          </label>
+          <div class="col">
+            <input type="text" readonly class="form-control" id="rewind-action">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="forward-action" class="col-sm-3 col-lg-2 col-form-label">
+            Forward Action
+          </label>
+          <div class="col">
+            <input type="text" readonly class="form-control" id="forward-action">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="forward-turn" class="col-sm-3 col-lg-2 col-form-label">
+            Forward Turn
+          </label>
+          <div class="col">
+            <input type="text" readonly class="form-control" id="forward-turn">
+          </div>
+        </div>
+        <div class="row">
+          <span id="keybind-instructions" class="keybind-instructions hidden">
+            Press the key that you want to bind for <span>Rewind Turn</span>
+          </span>
+        </div>
+        <h2 class="mt-3">Moveplanner Plus</h2>
+        <div class="row mb-3">
+          <div class="col">
+            <div class="form-check">
+              <input type="checkbox" checked class="form-check-input"
+                     id="enable-moveplanner-plus">
+              <label for="enable-moveplanner-plus" class="form-check-label">
+                Enable Moveplanner Plus
+              </label>
+            </div>
+          </div>
+          <div class="form-text">
+            <p>
+            Moveplanner Plus adds "player panels" with unit count, unit value, income,
+            and funds to the moveplanner. It can also track funds over time by deducting
+            funds when units are built and adding funds income when you advance the turn.
+            </p>
+            <p class="mb-0">
+            Moveplanner Plus does not yet track power bar charge or handle repairs.
+            </p>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <div class="form-check">
+              <input type="checkbox" checked class="form-check-input"
+                     id="enable-savestate-patching">
+              <label for="enable-savestate-patching" class="form-check-label">
+                Enable Savestate patching
+              </label>
+            </div>
+          </div>
+          <div class="form-text">
+            Enabling this option fixes the "broken black boat sprite" bug for savestates
+            that you download.
+          </div>
+        </div>
+      </form>
+    </div>
+    <script src="options.js"></script>
+  </body>
 </html>
