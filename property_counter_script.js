@@ -113,6 +113,15 @@ if (gamemap !== undefined) {
         parser.addListener((mapEntities) => {
             playersPanel.handleUpdate(mapEntities);
         });
+
+        let buildMenu = document.getElementById("build-menu");
+        let buildMenuListener = new BuildMenuListener(buildMenu, mapEntities.properties);
+        parser.addListener((mapEntities) => {
+            buildMenuListener.onMapUpdate(mapEntities);
+        });
+        buildMenuListener.addUnitBuildListener((property, builtUnit) => {
+            playersPanel.handleUnitBuilt(property, builtUnit);
+        });
     }
 
     let throttler = new UpdateThrottler(kDefaultThrottleMs, () => {
