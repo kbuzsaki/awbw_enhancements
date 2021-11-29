@@ -37,6 +37,7 @@
                 "lib/player_panel.js",
                 "lib/players_panel.js",
                 "lib/savestate_interceptor.js",
+                "lib/savestate_manager.js",
                 "lib/update_throttler.js",
                 "content_scripts/moveplanner_plus_script.js"
             ]

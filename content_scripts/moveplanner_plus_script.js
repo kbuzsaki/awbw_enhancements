@@ -129,6 +129,9 @@ if (gamemap && removedUnitsPanel) {
     let loadStateInput = document.getElementById("load-state-input");
     let savestateInterceptor = new SavestateInterceptor(loadStateInput, [playersPanel]);
 
+    let controlsTable = document.getElementById("game-controls-table");
+    let savestateManager = new SavestateManager(controlsTable, savestateInterceptor);
+
     // TODO: determine whether having no throttle rate is acceptable now that we ignore
     // cursor events and only run on the moveplanner.
     let throttleMs = 0;
