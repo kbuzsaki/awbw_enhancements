@@ -63,6 +63,7 @@ function getInitialPlayerState(mapEntities) {
             playerInfo.is_current_turn = false;
 
             // If income is set and non-zero, try to infer the funding level
+            // TODO: account for sasha
             if (playerInfo.players_income && !fundsPerProperty) {
                 let properties = propertiesByCountry[playerInfo.countries_code];
                 let incomeProperties = properties.filter((p) => p.producesIncome()).length;
@@ -109,6 +110,8 @@ if (gamemap !== undefined) {
         let mapEntities = parser.parseMapEntities();
         let players = getInitialPlayerState(mapEntities);
 
+        // TODO: consider inserting the players panel before the removed units panel,
+        // rather than after it.
         let playersPanel = new PlayersPanel(removedUnitsPanel, players);
         parser.addListener((mapEntities) => {
             playersPanel.handleUpdate(mapEntities);
@@ -127,6 +130,7 @@ if (gamemap !== undefined) {
         let savestateInterceptor = new SavestateInterceptor(loadStateInput, [playersPanel]);
     }
 
+    // TODO: consider reducing the throttle duration or eliminating it altogether.
     let throttler = new UpdateThrottler(kDefaultThrottleMs, () => {
         parser.handleMapUpdate();
     });
