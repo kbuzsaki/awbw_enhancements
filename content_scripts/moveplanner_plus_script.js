@@ -104,33 +104,30 @@ function getInitialPlayerState(mapEntities) {
 }
 
 let gamemap = document.getElementById("gamemap");
-if (gamemap !== undefined) {
+let removedUnitsPanel = document.getElementById("planner_removed_units");
+if (gamemap && removedUnitsPanel) {
     let parser = new GameStateParser(gamemap);
+    let initialMapEntities = parser.parseMapEntities();
+    let players = getInitialPlayerState(initialMapEntities);
 
-    let removedUnitsPanel = document.getElementById("planner_removed_units");
-    if (removedUnitsPanel) {
-        let mapEntities = parser.parseMapEntities();
-        let players = getInitialPlayerState(mapEntities);
+    // TODO: consider inserting the players panel before the removed units panel,
+    // rather than after it.
+    let playersPanel = new PlayersPanel(removedUnitsPanel, players);
+    parser.addListener((mapEntities) => {
+        playersPanel.handleUpdate(mapEntities);
+    });
 
-        // TODO: consider inserting the players panel before the removed units panel,
-        // rather than after it.
-        let playersPanel = new PlayersPanel(removedUnitsPanel, players);
-        parser.addListener((mapEntities) => {
-            playersPanel.handleUpdate(mapEntities);
-        });
+    let buildMenu = document.getElementById("build-menu");
+    let buildMenuListener = new BuildMenuListener(buildMenu, initialMapEntities.properties);
+    parser.addListener((mapEntities) => {
+        buildMenuListener.onMapUpdate(mapEntities);
+    });
+    buildMenuListener.addUnitBuildListener((property, builtUnit) => {
+        playersPanel.handleUnitBuilt(property, builtUnit);
+    });
 
-        let buildMenu = document.getElementById("build-menu");
-        let buildMenuListener = new BuildMenuListener(buildMenu, mapEntities.properties);
-        parser.addListener((mapEntities) => {
-            buildMenuListener.onMapUpdate(mapEntities);
-        });
-        buildMenuListener.addUnitBuildListener((property, builtUnit) => {
-            playersPanel.handleUnitBuilt(property, builtUnit);
-        });
-
-        let loadStateInput = document.getElementById("load-state-input");
-        let savestateInterceptor = new SavestateInterceptor(loadStateInput, [playersPanel]);
-    }
+    let loadStateInput = document.getElementById("load-state-input");
+    let savestateInterceptor = new SavestateInterceptor(loadStateInput, [playersPanel]);
 
     // TODO: consider reducing the throttle duration or eliminating it altogether.
     let throttler = new UpdateThrottler(kDefaultThrottleMs, () => {
