@@ -1,6 +1,6 @@
 {
     "name": "AWBW Helper",
-    "description": "Miscellaneous tweaks for Advance Wars By Web.",
+    "description": "Replay keyboard shortcuts and moveplanner enhancements for Advance Wars By Web.",
     "version": "0.1",
     "manifest_version": 3,
     "background": {
