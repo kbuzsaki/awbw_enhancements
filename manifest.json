@@ -24,7 +24,10 @@
     "options_page": "options.html",
     "content_scripts": [
         {
-            "matches": ["https://awbw.amarriner.com/*"],
+            "matches": ["https://awbw.amarriner.com/2030.php*"],
+            "js": ["replay_shortcuts_script.js"]
+        }, {
+            "matches": ["https://awbw.amarriner.com/moveplanner.php*"],
             "css": ["res/awbw_helper.css"],
             "js": [
                 "lib/util.js",
@@ -35,7 +38,6 @@
                 "lib/players_panel.js",
                 "lib/savestate_interceptor.js",
                 "lib/update_throttler.js",
-                "replay_shortcuts_script.js",
                 "property_counter_script.js"
             ]
         }
