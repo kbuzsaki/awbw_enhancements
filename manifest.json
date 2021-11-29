@@ -21,7 +21,7 @@
         "48": "/res/images/fighter_icon48.png",
         "128": "/res/images/fighter_icon128.png"
     },
-    "options_page": "options.html",
+    "options_page": "options/options.html",
     "content_scripts": [
         {
             "matches": ["https://awbw.amarriner.com/2030.php*"],
