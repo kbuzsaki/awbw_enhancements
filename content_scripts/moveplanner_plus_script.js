@@ -129,8 +129,10 @@ if (gamemap && removedUnitsPanel) {
     let loadStateInput = document.getElementById("load-state-input");
     let savestateInterceptor = new SavestateInterceptor(loadStateInput, [playersPanel]);
 
-    // TODO: consider reducing the throttle duration or eliminating it altogether.
-    let throttler = new UpdateThrottler(kDefaultThrottleMs, () => {
+    // TODO: determine whether having no throttle rate is acceptable now that we ignore
+    // cursor events and only run on the moveplanner.
+    let throttleMs = 0;
+    let throttler = new UpdateThrottler(throttleMs, () => {
         parser.handleMapUpdate();
     });
     let observer = new MutationObserver((mutations, observer) => {
