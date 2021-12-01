@@ -58,7 +58,7 @@ function getInitialPlayerState(mapEntities) {
             let startTime = Date.parse(playerInfo.players_turn_start);
             if (startTime > latestPlayerStartTime) {
                 latestPlayer = playerInfo;
-                latestPlayerStart = startTime;
+                latestPlayerStartTime = startTime;
             }
             playerInfo.is_current_turn = false;
 
