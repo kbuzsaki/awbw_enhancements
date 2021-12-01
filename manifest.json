@@ -42,5 +42,11 @@
                 "content_scripts/moveplanner_plus_script.js"
             ]
         }
+    ],
+    "web_accessible_resources": [
+        {
+            "matches": ["https://awbw.amarriner.com/*"],
+            "resources": ["savestate_injector.js"]
+        }
     ]
 }

@@ -157,3 +157,14 @@ if (gamemap && removedUnitsPanel) {
     // Initial ping to grab state if there are no other events
     throttler.handleUpdate();
 }
+
+(function(){
+    let snapshotElement = document.createElement("div");
+    snapshotElement.id = "awbw_helper-savestate-snapshot";
+    document.body.appendChild(snapshotElement);
+
+    let s = document.createElement("script");
+    s.src = chrome.runtime.getURL("savestate_injector.js");
+    s.onload = function() { this.remove(); };
+    (document.head || document.documentElement).appendChild(s);
+})();
