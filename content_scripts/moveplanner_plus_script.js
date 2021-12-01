@@ -103,6 +103,10 @@ function getInitialPlayerState(mapEntities) {
     return players;
 }
 
+// TODO: support for "undo"
+// TODO: better support for sonja somehow? at least bugfixing NaNs and broken images
+// TODO: broken snapshot for fog?
+//
 let gamemap = document.getElementById("gamemap");
 let removedUnitsPanel = document.getElementById("planner_removed_units");
 if (gamemap && removedUnitsPanel) {
