@@ -125,3 +125,38 @@
 .awbwhelper-wn-player-border {
   border-color: rgb(205, 155, 154);
 }
+
+
+.awbwhelper-btn {
+    display: flex;
+    height: 20px;
+    width: 100px;
+
+    align-items: center;
+    background: #FFFFFF;
+    border: 1px solid rgb(161, 161, 161);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    justify-content: center;
+    padding: 2px 4px;
+    margin-left: 8px;
+}
+.awbwhelper-btn:hover {
+    filter: brightness(90%);
+}
+
+.awbwhelper-select {
+    flex-grow: 1;
+    display: flex;
+    height: 26px;
+    width: 100px;
+    margin-left: 8px;
+    padding: 2px 4px;
+    margin-right: 4px;
+}
+
+.awbwhelper-btn-container {
+  display: flex;
+  height: 100%;
+}

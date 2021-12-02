@@ -135,6 +135,7 @@ if (gamemap && removedUnitsPanel) {
 
     let controlsTable = document.getElementById("game-controls-table");
     let savestateManager = new SavestateManager(controlsTable, savestateInterceptor);
+    playersPanel.addTurnStartListener(savestateManager.onTurnStart.bind(savestateManager));
 
     // TODO: determine whether having no throttle rate is acceptable now that we ignore
     // cursor events and only run on the moveplanner.
@@ -160,6 +161,8 @@ if (gamemap && removedUnitsPanel) {
 
     // Initial ping to grab state if there are no other events
     throttler.handleUpdate();
+
+    playersPanel.startFirstTurn();
 }
 
 (function(){
