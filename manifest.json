@@ -46,7 +46,10 @@
     "web_accessible_resources": [
         {
             "matches": ["https://awbw.amarriner.com/*"],
-            "resources": ["savestate_injector.js"]
+            "resources": [
+                "savestate_injector.js",
+                "unitsinfo_patcher.js"
+            ]
         }
     ]
 }

@@ -170,8 +170,13 @@ if (gamemap && removedUnitsPanel) {
     snapshotElement.id = "awbw_helper-savestate-snapshot";
     document.body.appendChild(snapshotElement);
 
-    let s = document.createElement("script");
-    s.src = chrome.runtime.getURL("savestate_injector.js");
-    s.onload = function() { this.remove(); };
-    (document.head || document.documentElement).appendChild(s);
+    function injectScript(scriptName) {
+        let s = document.createElement("script");
+        s.src = chrome.runtime.getURL(scriptName);
+        s.onload = function() { this.remove(); };
+        (document.head || document.documentElement).appendChild(s);
+    }
+    // TODO: add settings for controlling which patches are injected?
+    injectScript("savestate_injector.js");
+    injectScript("unitsinfo_patcher.js");
 })();
