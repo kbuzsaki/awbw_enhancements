@@ -106,6 +106,8 @@ function getInitialPlayerState(mapEntities) {
 // TODO: support for "undo"
 // TODO: better support for sonja somehow? at least bugfixing NaNs and broken images
 // TODO: broken snapshot for fog?
+// TODO: unit movement ranges
+// TODO: "reinforcement time heat map" for different movement types
 //
 let gamemap = document.getElementById("gamemap");
 let replayContainer = document.getElementById("replay-container");
@@ -162,6 +164,7 @@ if (gamemap && replayContainer) {
     // Initial ping to grab state if there are no other events
     throttler.handleUpdate();
 
+    // TODO: does this race with the unitsinfo patching?
     playersPanel.startFirstTurn();
 }
 
