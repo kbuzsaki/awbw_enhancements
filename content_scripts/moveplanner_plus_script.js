@@ -108,15 +108,15 @@ function getInitialPlayerState(mapEntities) {
 // TODO: broken snapshot for fog?
 //
 let gamemap = document.getElementById("gamemap");
-let removedUnitsPanel = document.getElementById("planner_removed_units");
-if (gamemap && removedUnitsPanel) {
+let replayContainer = document.getElementById("replay-container");
+if (gamemap && replayContainer) {
     let parser = new GameStateParser(gamemap);
     let initialMapEntities = parser.parseMapEntities();
     let players = getInitialPlayerState(initialMapEntities);
 
     // TODO: consider inserting the players panel before the removed units panel,
     // rather than after it.
-    let playersPanel = new PlayersPanel(removedUnitsPanel, players);
+    let playersPanel = new PlayersPanel(replayContainer, players);
     parser.addListener((mapEntities) => {
         playersPanel.handleUpdate(mapEntities);
     });

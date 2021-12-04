@@ -160,3 +160,33 @@
   display: flex;
   height: 100%;
 }
+
+
+.awbwhelper-sidebar-container {
+    height: 896px;
+    overflow-y: scroll;
+}
+
+.awbwhelper-sidebar-entry {
+    margin-left: 10px;
+}
+
+.awbwhelper-player-entry {
+    display: flex;
+    height: 100%;
+    align-items: self-start;
+    flex-direction: column;
+}
+
+.awbwhelper-player-banner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.awbwhelper-player-status {
+    margin-bottom: 5px;
+}
+.awbwhelper-player-controls {
+}
+.awbwhelper-player-bar {
+}
