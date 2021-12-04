@@ -6,6 +6,18 @@
                 console.log("patching units_players_id for unit:", unit);
                 unit.units_players_id = unit.players_id;
             }
+
+            // TODO: check if the unit is on a capturable tile?
+            let span = document.getElementById("unit_" + unitId);
+            if (span) {
+                let imgs = span.getElementsByTagName("img");
+                for (let img of imgs) {
+                    if (img.src.indexOf("capture") !== -1) {
+                        console.log("patching units_capture for unit:", unit);
+                        unit.units_capture = 1;
+                    }
+                }
+            }
         }
     }
 
