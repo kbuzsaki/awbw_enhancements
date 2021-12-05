@@ -108,96 +108,111 @@ function getInitialPlayerState(mapEntities) {
 // TODO: broken snapshot for fog?
 // TODO: unit movement ranges
 // TODO: "reinforcement time heat map" for different movement types
-//
-let optionsReader = new OptionsReader();
-optionsReader.onOptionsReady((options) => {
-    if (!options.options_enable_moveplanner_plus) {
-        console.log("Moveplanner plus disabled, exiting setup");
-        return;
-    }
 
-    let gamemap = document.getElementById("gamemap");
-    let replayContainer = document.getElementById("replay-container");
-    if (!gamemap || !replayContainer) {
-        console.log("Failed to find gamemap (", gamemap, ") or replayContainer (", replayContainer, ")");
-        return;
-    }
-
-    let parser = new GameStateParser(gamemap);
-    let initialMapEntities = parser.parseMapEntities();
-    let players = getInitialPlayerState(initialMapEntities);
-
-    // TODO: consider inserting the players panel before the removed units panel,
-    // rather than after it.
-    let playersPanel = new PlayersPanel(replayContainer, players);
-    parser.addListener((mapEntities) => {
-        playersPanel.handleUpdate(mapEntities);
-    });
-
-    let buildMenu = document.getElementById("build-menu");
-    let buildMenuListener = new BuildMenuListener(buildMenu, initialMapEntities.properties);
-    parser.addListener((mapEntities) => {
-        buildMenuListener.onMapUpdate(mapEntities);
-    });
-    buildMenuListener.addUnitBuildListener((property, builtUnit) => {
-        playersPanel.handleUnitBuilt(property, builtUnit);
-    });
-
-    if (options.options_enable_move_range_preview) {
-        let terrainInfo = scrapeTerrainInfo();
-        let rangePreview = new MoveRangePreview(gamemap, terrainInfo);
-        rangePreview.updateMoveRange([]);
-        parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
-    }
-
-    let loadStateInput = document.getElementById("load-state-input");
-    let savestateInterceptor = new SavestateInterceptor(options, loadStateInput, [playersPanel]);
-
-    let controlsTable = document.getElementById("game-controls-table");
-    let savestateManager = new SavestateManager(controlsTable, savestateInterceptor);
-    playersPanel.addTurnStartListener(savestateManager.onTurnStart.bind(savestateManager));
-
-    // TODO: determine whether having no throttle rate is acceptable now that we ignore
-    // cursor events and only run on the moveplanner.
-    let throttleMs = 0;
-    let throttler = new UpdateThrottler(throttleMs, () => {
-        parser.handleMapUpdate();
-    });
-    let observer = new MutationObserver((mutations, observer) => {
-        // Ignore cursor-only mutations, they can't affect game state.
-        let isInteresting = false;
-        for (let mutation of mutations) {
-            if (mutation.target.id != "cursor") {
-                isInteresting = true;
-                break;
-            }
-        }
-
-        if (isInteresting) {
-            throttler.handleUpdate();
-        }
-    });
-    observer.observe(gamemap, {subtree: true, childList: true, attributes: true});
-
-    // Initial ping to grab state if there are no other events
-    throttler.handleUpdate();
-
-    // TODO: does this race with the unitsinfo patching?
-    playersPanel.startFirstTurn();
-});
-
-(function(){
+function injectRequestedScripts(options, done) {
     let snapshotElement = document.createElement("div");
     snapshotElement.id = "awbw_helper-savestate-snapshot";
     document.body.appendChild(snapshotElement);
 
-    function injectScript(scriptName) {
+    // TODO: add settings for controlling which patches are injected?
+    let scripts = [];
+    scripts.push("savestate_injector.js");
+    scripts.push("unitsinfo_patcher.js");
+    console.log("Injecting requested scripts:", scripts);
+
+    function injectScript(scriptName, onload) {
         let s = document.createElement("script");
         s.src = chrome.runtime.getURL(scriptName);
-        s.onload = function() { this.remove(); };
+        s.onload = onload;
         (document.head || document.documentElement).appendChild(s);
     }
-    // TODO: add settings for controlling which patches are injected?
-    injectScript("savestate_injector.js");
-    injectScript("unitsinfo_patcher.js");
-})();
+
+    let numFinished = 0;
+    for (let script of scripts) {
+        injectScript(script, () => {
+            numFinished++;
+            if (numFinished === scripts.length) {
+                done();
+            }
+        });
+    }
+}
+
+let optionsReader = new OptionsReader();
+optionsReader.onOptionsReady((options) => {
+    // Inject scripts before performing other setup so that all of the patches are in place.
+    injectRequestedScripts(options, () => {
+        if (!options.options_enable_moveplanner_plus) {
+            console.log("Moveplanner plus disabled, exiting setup");
+            return;
+        }
+
+        let gamemap = document.getElementById("gamemap");
+        let replayContainer = document.getElementById("replay-container");
+        if (!gamemap || !replayContainer) {
+            console.log("Failed to find gamemap (", gamemap, ") or replayContainer (", replayContainer, ")");
+            return;
+        }
+
+        let parser = new GameStateParser(gamemap);
+        let initialMapEntities = parser.parseMapEntities();
+        let players = getInitialPlayerState(initialMapEntities);
+
+        // TODO: consider inserting the players panel before the removed units panel,
+        // rather than after it.
+        let playersPanel = new PlayersPanel(replayContainer, players);
+        parser.addListener((mapEntities) => {
+            playersPanel.handleUpdate(mapEntities);
+        });
+
+        let buildMenu = document.getElementById("build-menu");
+        let buildMenuListener = new BuildMenuListener(buildMenu, initialMapEntities.properties);
+        parser.addListener((mapEntities) => {
+            buildMenuListener.onMapUpdate(mapEntities);
+        });
+        buildMenuListener.addUnitBuildListener((property, builtUnit) => {
+            playersPanel.handleUnitBuilt(property, builtUnit);
+        });
+
+        if (options.options_enable_move_range_preview) {
+            let terrainInfo = scrapeTerrainInfo();
+            let rangePreview = new MoveRangePreview(gamemap, terrainInfo);
+            rangePreview.updateMoveRange([]);
+            parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
+        }
+
+        let loadStateInput = document.getElementById("load-state-input");
+        let savestateInterceptor = new SavestateInterceptor(options, loadStateInput, [playersPanel]);
+
+        let controlsTable = document.getElementById("game-controls-table");
+        let savestateManager = new SavestateManager(controlsTable, savestateInterceptor);
+        playersPanel.addTurnStartListener(savestateManager.onTurnStart.bind(savestateManager));
+
+        // TODO: determine whether having no throttle rate is acceptable now that we ignore
+        // cursor events and only run on the moveplanner.
+        let throttleMs = 0;
+        let throttler = new UpdateThrottler(throttleMs, () => {
+            parser.handleMapUpdate();
+        });
+        let observer = new MutationObserver((mutations, observer) => {
+            // Ignore cursor-only mutations, they can't affect game state.
+            let isInteresting = false;
+            for (let mutation of mutations) {
+                if (mutation.target.id != "cursor") {
+                    isInteresting = true;
+                    break;
+                }
+            }
+
+            if (isInteresting) {
+                throttler.handleUpdate();
+            }
+        });
+        observer.observe(gamemap, {subtree: true, childList: true, attributes: true});
+
+        // Initial ping to grab state if there are no other events
+        throttler.handleUpdate();
+
+        playersPanel.startFirstTurn();
+    });
+});
