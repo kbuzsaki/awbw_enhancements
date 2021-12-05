@@ -15,7 +15,7 @@
         <div class="row mb-3">
           <div class="col">
             <div class="form-check">
-              <input type="checkbox" checked class="form-check-input"
+              <input type="checkbox" class="form-check-input"
                      id="enable-replay-shortcuts">
               <label for="enable-replay-shortcuts" class="form-check-label">
                 Enable Replay Keyboard Shortcuts
@@ -68,7 +68,7 @@
         <div class="row mb-3">
           <div class="col">
             <div class="form-check">
-              <input type="checkbox" checked class="form-check-input"
+              <input type="checkbox" class="form-check-input"
                      id="enable-moveplanner-plus">
               <label for="enable-moveplanner-plus" class="form-check-label">
                 Enable Moveplanner Plus
@@ -76,30 +76,61 @@
             </div>
           </div>
           <div class="form-text">
-            <p>
+            <p class="mb-2">
             Moveplanner Plus adds "player panels" with unit count, unit value, income,
             and funds to the moveplanner. It can also track funds over time by deducting
             funds when units are built and adding funds income when you advance the turn.
             </p>
-            <p class="mb-0">
+            <p class="mb-2">
             Moveplanner Plus currently does not track power bar charge, handle repairs,
             or correctly account for units loaded in transports.
+            </p>
+            <p class="mb-0">
+            Enabling Moveplanner Plus is required for all other features in this category, with the exception
+            of certain bug fixes.
             </p>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col">
             <div class="form-check">
-              <input type="checkbox" checked class="form-check-input"
-                     id="enable-savestate-patching">
-              <label for="enable-savestate-patching" class="form-check-label">
-                Enable Savestate patching
+              <input type="checkbox" class="form-check-input js-requires-moveplanner-plus"
+                     id="enable-savestate-interception">
+              <label for="enable-savestate-interception" class="form-check-label">
+                Enable Savestate Interception
               </label>
             </div>
           </div>
           <div class="form-text">
-            Enabling this option fixes the "broken black boat sprite" bug for savestates
-            that you download.
+            <p class="mb-2">
+            This option enables the in-page "snapshot and restore" feature that lets you
+            make quick savestates without downloading a savestate file. It also adds AWBW Helper's
+            extra data like current funds to savestates that you download.
+            </p>
+            <p class="mb-0">
+            Disabling this feature will stop AWBW Helper from tampering with savestate downloads.
+            This is an escape hatch in case future AWBW updates temporarily break the snapshot feature.
+            </p>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input js-requires-moveplanner-plus"
+                     id="enable-move-range-preview">
+              <label for="enable-move-range-preview" class="form-check-label">
+                  Enable Move Range Preview [Work In Progress]
+              </label>
+            </div>
+          </div>
+          <div class="form-text">
+            <p class="mb-2">
+            Adds a movement range preview when selecting units in the moveplanner.
+            </p>
+            <p class="mb-0">
+            This feature is not fully implemented yet. It does not handle CO-specific movement boosts
+            or weather, and it will likely never handle fuel.
+            </p>
           </div>
         </div>
       </form>

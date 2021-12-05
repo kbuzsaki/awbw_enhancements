@@ -118,3 +118,61 @@ let keybindOptions = [];
 for (let optionId in kDefaultBindings) {
     keybindOptions.push(new KeybindOption(optionId, keybindListener));
 }
+
+
+let kOptionsMapping = [
+    {id: "enable-replay-shortcuts",       name: "options_enable_replay_shortcuts",       default: true},
+    {id: "enable-moveplanner-plus",       name: "options_enable_moveplanner_plus",       default: true},
+    {id: "enable-savestate-interception", name: "options_enable_savestate_interception", default: true},
+    {id: "enable-move-range-preview",     name: "options_enable_move_range_preview",     default: false},
+];
+
+function setOptionsOnPage(options) {
+    for (let optionMapping of kOptionsMapping) {
+        if (options.hasOwnProperty(optionMapping.name)) {
+            let inputElement = document.getElementById(optionMapping.id);
+            if (inputElement) {
+                inputElement.checked = options[optionMapping.name];
+            }
+        }
+    }
+}
+
+function parseOptionsFromPage() {
+    let parsedOptions = {};
+
+    for (let optionMapping of kOptionsMapping) {
+        let inputElement = document.getElementById(optionMapping.id);
+        if (inputElement) {
+            parsedOptions[optionMapping.name] = inputElement.checked;
+        }
+    }
+
+    return parsedOptions;
+}
+
+let kOptionDefaults = Object.fromEntries(kOptionsMapping.map(
+    (optionMapping) => [optionMapping.name, optionMapping.default]));
+
+chrome.storage.sync.get(kOptionDefaults, (result) => {
+    setOptionsOnPage(result);
+
+    let moveplannerPlusChildOptions = document.getElementsByClassName("js-requires-moveplanner-plus");
+    for (let childOption of moveplannerPlusChildOptions) {
+        childOption.disabled = !result.options_enable_moveplanner_plus;
+    }
+
+    let checkboxes = document.querySelectorAll("input[type=checkbox]");
+    for (let checkbox of checkboxes) {
+        checkbox.addEventListener("change", (event) => {
+            let parsedOptions = parseOptionsFromPage();
+            console.log("Updating options:", parsedOptions);
+            chrome.storage.sync.set(parsedOptions);
+
+            let moveplannerPlusDisabled = !parsedOptions.options_enable_moveplanner_plus;
+            for (let childOption of moveplannerPlusChildOptions) {
+                childOption.disabled = moveplannerPlusDisabled;
+            }
+        });
+    }
+});
