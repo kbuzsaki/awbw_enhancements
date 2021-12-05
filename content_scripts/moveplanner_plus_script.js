@@ -151,7 +151,7 @@ optionsReader.onOptionsReady((options) => {
     }
 
     let loadStateInput = document.getElementById("load-state-input");
-    let savestateInterceptor = new SavestateInterceptor(loadStateInput, [playersPanel]);
+    let savestateInterceptor = new SavestateInterceptor(options, loadStateInput, [playersPanel]);
 
     let controlsTable = document.getElementById("game-controls-table");
     let savestateManager = new SavestateManager(controlsTable, savestateInterceptor);
