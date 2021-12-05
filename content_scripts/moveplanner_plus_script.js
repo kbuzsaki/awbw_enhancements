@@ -181,12 +181,14 @@ optionsReader.onOptionsReady((options) => {
             parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
         }
 
-        let loadStateInput = document.getElementById("load-state-input");
-        let savestateInterceptor = new SavestateInterceptor(options, loadStateInput, [playersPanel]);
+        if (options.options_enable_savestate_interception) {
+            let loadStateInput = document.getElementById("load-state-input");
+            let savestateInterceptor = new SavestateInterceptor(options, loadStateInput, [playersPanel]);
 
-        let controlsTable = document.getElementById("game-controls-table");
-        let savestateManager = new SavestateManager(controlsTable, savestateInterceptor);
-        playersPanel.addTurnStartListener(savestateManager.onTurnStart.bind(savestateManager));
+            let controlsTable = document.getElementById("game-controls-table");
+            let savestateManager = new SavestateManager(controlsTable, savestateInterceptor);
+            playersPanel.addTurnStartListener(savestateManager.onTurnStart.bind(savestateManager));
+        }
 
         // TODO: determine whether having no throttle rate is acceptable now that we ignore
         // cursor events and only run on the moveplanner.
