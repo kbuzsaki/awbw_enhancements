@@ -34,6 +34,7 @@
                 "lib/game_data.js",
                 "lib/game_state_parser.js",
                 "lib/build_menu_listener.js",
+                "lib/move_range_preview.js",
                 "lib/player_panel.js",
                 "lib/players_panel.js",
                 "lib/savestate_interceptor.js",

@@ -132,6 +132,11 @@ if (gamemap && replayContainer) {
         playersPanel.handleUnitBuilt(property, builtUnit);
     });
 
+    let terrainInfo = scrapeTerrainInfo();
+    let rangePreview = new MoveRangePreview(gamemap, terrainInfo);
+    rangePreview.updateMoveRange([]);
+    parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
+
     let loadStateInput = document.getElementById("load-state-input");
     let savestateInterceptor = new SavestateInterceptor(loadStateInput, [playersPanel]);
 
