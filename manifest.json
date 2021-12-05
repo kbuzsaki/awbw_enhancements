@@ -25,13 +25,17 @@
     "content_scripts": [
         {
             "matches": ["https://awbw.amarriner.com/2030.php*"],
-            "js": ["content_scripts/replay_shortcuts_script.js"]
+            "js": [
+                "lib/options_reader.js",
+                "content_scripts/replay_shortcuts_script.js"
+            ]
         }, {
             "matches": ["https://awbw.amarriner.com/moveplanner.php*"],
             "css": ["res/awbw_helper.css"],
             "js": [
                 "lib/util.js",
                 "lib/game_data.js",
+                "lib/options_reader.js",
                 "lib/game_state_parser.js",
                 "lib/build_menu_listener.js",
                 "lib/move_range_preview.js",

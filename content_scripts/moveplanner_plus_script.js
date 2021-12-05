@@ -109,9 +109,20 @@ function getInitialPlayerState(mapEntities) {
 // TODO: unit movement ranges
 // TODO: "reinforcement time heat map" for different movement types
 //
-let gamemap = document.getElementById("gamemap");
-let replayContainer = document.getElementById("replay-container");
-if (gamemap && replayContainer) {
+let optionsReader = new OptionsReader();
+optionsReader.onOptionsReady((options) => {
+    if (!options.options_enable_moveplanner_plus) {
+        console.log("Moveplanner plus disabled, exiting setup");
+        return;
+    }
+
+    let gamemap = document.getElementById("gamemap");
+    let replayContainer = document.getElementById("replay-container");
+    if (!gamemap || !replayContainer) {
+        console.log("Failed to find gamemap (", gamemap, ") or replayContainer (", replayContainer, ")");
+        return;
+    }
+
     let parser = new GameStateParser(gamemap);
     let initialMapEntities = parser.parseMapEntities();
     let players = getInitialPlayerState(initialMapEntities);
@@ -132,10 +143,12 @@ if (gamemap && replayContainer) {
         playersPanel.handleUnitBuilt(property, builtUnit);
     });
 
-    let terrainInfo = scrapeTerrainInfo();
-    let rangePreview = new MoveRangePreview(gamemap, terrainInfo);
-    rangePreview.updateMoveRange([]);
-    parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
+    if (options.options_enable_move_range_preview) {
+        let terrainInfo = scrapeTerrainInfo();
+        let rangePreview = new MoveRangePreview(gamemap, terrainInfo);
+        rangePreview.updateMoveRange([]);
+        parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
+    }
 
     let loadStateInput = document.getElementById("load-state-input");
     let savestateInterceptor = new SavestateInterceptor(loadStateInput, [playersPanel]);
@@ -171,7 +184,7 @@ if (gamemap && replayContainer) {
 
     // TODO: does this race with the unitsinfo patching?
     playersPanel.startFirstTurn();
-}
+});
 
 (function(){
     let snapshotElement = document.createElement("div");

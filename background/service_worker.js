@@ -8,15 +8,23 @@ function shouldInterceptDownload(downloadItem) {
 
 // Use onDeterminingFilename rather than onCreated so that we can get the filename
 chrome.downloads.onDeterminingFilename.addListener((downloadItem) => {
-    if (shouldInterceptDownload(downloadItem)) {
-        // Cancel the download and proxy its details to the content-script for rewriting
-        chrome.downloads.cancel(downloadItem.id);
-        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-            chrome.tabs.sendMessage(tabs[0].id, {
-                type: "savestate_download",
-                filename: downloadItem.filename,
-                finalUrl: downloadItem.finalUrl,
+    chrome.storage.sync.get({
+        options_enable_savestate_interception: true
+    }, (result) => {
+        if (!result.options_enable_savestate_interception) {
+            return;
+        }
+
+        if (shouldInterceptDownload(downloadItem)) {
+            // Cancel the download and proxy its details to the content-script for rewriting
+            chrome.downloads.cancel(downloadItem.id);
+            chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+                chrome.tabs.sendMessage(tabs[0].id, {
+                    type: "savestate_download",
+                    filename: downloadItem.filename,
+                    finalUrl: downloadItem.finalUrl,
+                });
             });
-        });
-    }
+        }
+    });
 });

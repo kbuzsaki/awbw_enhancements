@@ -15,50 +15,57 @@ function convertBindingsToMapping(bindings) {
     return newMapping;
 }
 
-let mapping = convertBindingsToMapping(kDefaultBindings);
-
-let rewindTurn = document.getElementsByClassName("replay-backward")[0];
-let rewindAction = document.getElementsByClassName("replay-backward-action")[0];
-let forwardAction = document.getElementsByClassName("replay-forward-action")[0];
-let forwardTurn = document.getElementsByClassName("replay-forward")[0];
-
-function handleKeyDown(event) {
-    // The "game page" and the "replay page" are actually the same page,
-    // with no page load in between.
-    // Check the URL for a replay index to see if we're in replay mode.
-    // TODO: find a better way to check if we're in replay mode?
-    if (window.location.href.indexOf("&ndx=") === -1) {
+let optionsReader = new OptionsReader();
+optionsReader.onOptionsReady((result) => {
+    if (!result.options_enable_replay_shortcuts) {
+        console.log("Repaly keyboard shortcuts disabled.");
         return;
     }
-    // Ignore modifier keys
-    if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
-        return;
-    }
-    let binding = mapping[event.keyCode];
-    if (binding === "rewind-turn") {
-        if (rewindTurn) {
-            rewindTurn.click();
-            event.preventDefault();
-        }
-    } else if (binding === "rewind-action") {
-        if (rewindAction) {
-            rewindAction.click();
-            event.preventDefault();
-        }
-    } else if (binding === "forward-action") {
-        if (forwardAction) {
-            forwardAction.click();
-            event.preventDefault();
-        }
-    } else if (binding === "forward-turn") {
-        if (forwardTurn) {
-            forwardTurn.click();
-            event.preventDefault();
-        }
-    } else {
-        // unrecognized key
-    }
-}
 
-document.addEventListener("keydown", handleKeyDown);
+    let mapping = convertBindingsToMapping(kDefaultBindings);
 
+    let rewindTurn = document.getElementsByClassName("replay-backward")[0];
+    let rewindAction = document.getElementsByClassName("replay-backward-action")[0];
+    let forwardAction = document.getElementsByClassName("replay-forward-action")[0];
+    let forwardTurn = document.getElementsByClassName("replay-forward")[0];
+
+    function handleKeyDown(event) {
+        // The "game page" and the "replay page" are actually the same page,
+        // with no page load in between.
+        // Check the URL for a replay index to see if we're in replay mode.
+        // TODO: find a better way to check if we're in replay mode?
+        if (window.location.href.indexOf("&ndx=") === -1) {
+            return;
+        }
+        // Ignore modifier keys
+        if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+            return;
+        }
+        let binding = mapping[event.keyCode];
+        if (binding === "rewind-turn") {
+            if (rewindTurn) {
+                rewindTurn.click();
+                event.preventDefault();
+            }
+        } else if (binding === "rewind-action") {
+            if (rewindAction) {
+                rewindAction.click();
+                event.preventDefault();
+            }
+        } else if (binding === "forward-action") {
+            if (forwardAction) {
+                forwardAction.click();
+                event.preventDefault();
+            }
+        } else if (binding === "forward-turn") {
+            if (forwardTurn) {
+                forwardTurn.click();
+                event.preventDefault();
+            }
+        } else {
+            // unrecognized key
+        }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+});
