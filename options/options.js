@@ -109,9 +109,6 @@ class KeybindOption {
 }
 
 
-// TODO: add option to disable keybinds entirely
-// TODO: add option to disable property counter entirely
-
 let keybindListener = new KeybindListener("keybind-instructions");
 let keybindOptions = [];
 for (let optionId in kDefaultBindings) {

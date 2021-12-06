@@ -106,7 +106,6 @@ function getInitialPlayerState(mapEntities) {
 // TODO: support for "undo"
 // TODO: better support for sonja somehow? at least bugfixing NaNs and broken images
 // TODO: broken snapshot for fog?
-// TODO: unit movement ranges
 // TODO: "reinforcement time heat map" for different movement types
 
 
@@ -173,8 +172,6 @@ optionsReader.onOptionsReady((options) => {
         let initialMapEntities = parser.parseMapEntities();
         let players = getInitialPlayerState(initialMapEntities);
 
-        // TODO: consider inserting the players panel before the removed units panel,
-        // rather than after it.
         let playersPanel = new PlayersPanel(replayContainer, players);
         parser.addListener((mapEntities) => {
             playersPanel.handleUpdate(mapEntities);
