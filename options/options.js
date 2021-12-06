@@ -113,26 +113,55 @@ class KeybindOption {
 // TODO: add option to disable property counter entirely
 
 let keybindListener = new KeybindListener("keybind-instructions");
-
 let keybindOptions = [];
 for (let optionId in kDefaultBindings) {
     keybindOptions.push(new KeybindOption(optionId + "-1", keybindListener));
 }
 
 
-let kOptionsMapping = [
+let kCheckOptionsMapping = [
     {id: "enable-replay-shortcuts",       name: "options_enable_replay_shortcuts",       default: true},
     {id: "enable-moveplanner-plus",       name: "options_enable_moveplanner_plus",       default: true},
     {id: "enable-savestate-interception", name: "options_enable_savestate_interception", default: true},
     {id: "enable-move-range-preview",     name: "options_enable_move_range_preview",     default: false},
 ];
 
+let kRangeOptionsMapping = [
+    {id: "menu-opacity-range", previewId: "menu-opacity-preview", name: "options_menu_opacity", default: 1}
+];
+
+let kAllOptionsMapping = kCheckOptionsMapping.concat(kRangeOptionsMapping);
+
+for (let optionMapping of kRangeOptionsMapping) {
+    let inputElement = document.getElementById(optionMapping.id);
+    let previewElement = document.getElementById(optionMapping.previewId);
+    if (inputElement && previewElement) {
+        inputElement.addEventListener("input", () => {
+            previewElement.value = inputElement.value;
+        });
+    }
+    previewElement.value = inputElement.value;
+}
+
 function setOptionsOnPage(options) {
-    for (let optionMapping of kOptionsMapping) {
+    for (let optionMapping of kCheckOptionsMapping) {
         if (options.hasOwnProperty(optionMapping.name)) {
             let inputElement = document.getElementById(optionMapping.id);
             if (inputElement) {
                 inputElement.checked = options[optionMapping.name];
+            }
+        }
+    }
+
+    for (let optionMapping of kRangeOptionsMapping) {
+        if (options.hasOwnProperty(optionMapping.name)) {
+            let inputElement = document.getElementById(optionMapping.id);
+            if (inputElement) {
+                inputElement.value = options[optionMapping.name];
+            }
+            let previewElement = document.getElementById(optionMapping.previewId);
+            if (previewElement) {
+                previewElement.value = options[optionMapping.name];
             }
         }
     }
@@ -141,17 +170,24 @@ function setOptionsOnPage(options) {
 function parseOptionsFromPage() {
     let parsedOptions = {};
 
-    for (let optionMapping of kOptionsMapping) {
+    for (let optionMapping of kCheckOptionsMapping) {
         let inputElement = document.getElementById(optionMapping.id);
         if (inputElement) {
             parsedOptions[optionMapping.name] = inputElement.checked;
         }
     }
 
+    for (let optionMapping of kRangeOptionsMapping) {
+        let inputElement = document.getElementById(optionMapping.id);
+        if (inputElement) {
+            parsedOptions[optionMapping.name] = inputElement.value;
+        }
+    }
+
     return parsedOptions;
 }
 
-let kOptionDefaults = Object.fromEntries(kOptionsMapping.map(
+let kOptionDefaults = Object.fromEntries(kAllOptionsMapping.map(
     (optionMapping) => [optionMapping.name, optionMapping.default]));
 
 chrome.storage.sync.get(kOptionDefaults, (result) => {
@@ -162,9 +198,9 @@ chrome.storage.sync.get(kOptionDefaults, (result) => {
         childOption.disabled = !result.options_enable_moveplanner_plus;
     }
 
-    let checkboxes = document.querySelectorAll("input[type=checkbox]");
-    for (let checkbox of checkboxes) {
-        checkbox.addEventListener("change", (event) => {
+    let inputs = document.querySelectorAll("input");
+    for (let input of inputs) {
+        input.addEventListener("input", (event) => {
             let parsedOptions = parseOptionsFromPage();
             console.log("Updating options:", parsedOptions);
             chrome.storage.sync.set(parsedOptions);

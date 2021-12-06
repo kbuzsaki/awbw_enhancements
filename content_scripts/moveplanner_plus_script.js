@@ -109,6 +109,20 @@ function getInitialPlayerState(mapEntities) {
 // TODO: unit movement ranges
 // TODO: "reinforcement time heat map" for different movement types
 
+
+function injectRequestedStyles(options) {
+    if (options.options_menu_opacity === 1) {
+        return;
+    }
+
+    let s = document.createElement("style");
+    s.innerHTML = `
+    #options-menu, #build-menu {
+      opacity: ${options.options_menu_opacity};
+    }`;
+    (document.head || document.documentElement).appendChild(s);
+}
+
 function injectRequestedScripts(options, done) {
     let snapshotElement = document.createElement("div");
     snapshotElement.id = "awbw_helper-savestate-snapshot";
@@ -140,6 +154,7 @@ function injectRequestedScripts(options, done) {
 
 let optionsReader = new OptionsReader();
 optionsReader.onOptionsReady((options) => {
+    injectRequestedStyles(options);
     // Inject scripts before performing other setup so that all of the patches are in place.
     injectRequestedScripts(options, () => {
         if (!options.options_enable_moveplanner_plus) {
