@@ -116,7 +116,7 @@ let keybindListener = new KeybindListener("keybind-instructions");
 
 let keybindOptions = [];
 for (let optionId in kDefaultBindings) {
-    keybindOptions.push(new KeybindOption(optionId, keybindListener));
+    keybindOptions.push(new KeybindOption(optionId + "-1", keybindListener));
 }
 
 
