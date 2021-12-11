@@ -179,7 +179,7 @@ function parseOptionsFromPage() {
     for (let optionMapping of kRangeOptionsMapping) {
         let inputElement = document.getElementById(optionMapping.id);
         if (inputElement) {
-            parsedOptions[optionMapping.name] = inputElement.value;
+            parsedOptions[optionMapping.name] = parseFloat(inputElement.value);
         }
     }
 
