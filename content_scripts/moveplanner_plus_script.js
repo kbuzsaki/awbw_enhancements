@@ -216,7 +216,7 @@ optionsReader.onOptionsReady((options) => {
             let terrainInfo = scrapeTerrainInfo();
             let buildingsInfo = scrapeBuildingsInfo();
             if (terrainInfo && buildingsInfo) {
-                let rangePreview = new MoveRangePreview(gamemap, terrainInfo, buildingsInfo);
+                let rangePreview = new MoveRangePreview(gamemap, terrainInfo, buildingsInfo, players);
                 rangePreview.updateMoveRange([]);
                 parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
             } else {
