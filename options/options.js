@@ -124,7 +124,9 @@ let kCheckOptionsMapping = [
 ];
 
 let kRangeOptionsMapping = [
-    {id: "menu-opacity-range", previewId: "menu-opacity-preview", name: "options_menu_opacity", default: 1}
+    {id: "menu-opacity-range", previewId: "menu-opacity-preview", name: "options_menu_opacity", default: 1},
+    {id: "default-funding-range", previewId: "default-funding-preview", name: "options_default_funding",
+            default: 1000}
 ];
 
 let kAllOptionsMapping = kCheckOptionsMapping.concat(kRangeOptionsMapping);

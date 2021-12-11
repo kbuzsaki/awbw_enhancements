@@ -46,7 +46,7 @@ function makeFakePlayerInfo(country, funds, isFirst) {
     };
 }
 
-function getInitialPlayerState(mapEntities) {
+function getInitialPlayerState(options, mapEntities) {
     let propertiesByCountry =
         partitionBy(mapEntities.properties, (property) => property.country.code);
 
@@ -72,14 +72,18 @@ function getInitialPlayerState(mapEntities) {
                 }
             }
         }
+        // TODO: add better handling for if playerInfo is incomplete.
+        if (latestPlayer === undefined) {
+            latestPlayer = players[0];
+        }
         latestPlayer.is_current_turn = true;
 
         if (!fundsPerProperty) {
-            fundsPerProperty = kDefaultFundingLevel;
+            fundsPerProperty = options.options_default_funding;
         }
     } else {
         // If there's no player data, fabricate some based on the predeployed properties.
-        fundsPerProperty = kDefaultFundingLevel;
+        fundsPerProperty = options.options_default_funding;;
 
         let isFirst = true;
         for (let country of kCountries) {
@@ -170,7 +174,7 @@ optionsReader.onOptionsReady((options) => {
 
         let parser = new GameStateParser(gamemap);
         let initialMapEntities = parser.parseMapEntities();
-        let players = getInitialPlayerState(initialMapEntities);
+        let players = getInitialPlayerState(options, initialMapEntities);
 
         let playersPanel = new PlayersPanel(replayContainer, players);
         parser.addListener((mapEntities) => {

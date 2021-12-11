@@ -173,7 +173,7 @@
           </div>
         </div>
         <div class="row mb-3">
-          <div class="col-sm-3 col-lg-2">
+          <div class="col-sm-4 col-lg-3">
             <label for="menu-opacity-range" class="form-label">
                 Menu Opacity
             </label>
@@ -187,6 +187,24 @@
           <div class="form-text">
             <p class="mb-2">
             Makes the "Action Menu" and "Build Menu" partially transparent so that you can see behind them.
+            </p>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-4 col-lg-3">
+            <label for="default-funding-range" class="form-label">
+                Default Funding
+            </label>
+          </div>
+          <div class="col-sm-2 col-xl-1">
+              <input type="text" readonly class="form-control" id="default-funding-preview" value="1000">
+          </div>
+          <div class="col">
+            <input type="range" min="0" max="9500" step="500" class="form-range" id="default-funding-range">
+          </div>
+          <div class="form-text">
+            <p class="mb-2">
+            The default funding level when opening the moveplanner from a map preview rather than an ongoing game.
             </p>
           </div>
         </div>
