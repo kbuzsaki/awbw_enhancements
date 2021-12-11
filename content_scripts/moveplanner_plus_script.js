@@ -165,6 +165,16 @@ optionsReader.onOptionsReady((options) => {
             return;
         }
 
+        // TODO: add options for the calculator toggle shortcut
+        let calculatorButton = document.querySelector(".calculator-toggle");
+        if (calculatorButton) {
+            document.addEventListener("keydown", (event) => {
+                if (event.keyCode === 67 /* c */) {
+                    calculatorButton.click();
+                }
+            });
+        }
+
         let gamemap = document.getElementById("gamemap");
         let replayContainer = document.getElementById("replay-container");
         if (!gamemap || !replayContainer) {
