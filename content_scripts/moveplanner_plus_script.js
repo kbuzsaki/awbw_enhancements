@@ -83,6 +83,7 @@ function getInitialPlayerState(options, mapEntities) {
                 }
             }
         }
+        // TODO: load data from load_replay.php if it's not available?
         // TODO: add better handling for if playerInfo is incomplete.
         if (latestPlayer === undefined) {
             latestPlayer = players[0];

@@ -109,6 +109,7 @@ class KeybindOption {
 }
 
 
+// TODO: actually implement keybinding customization for keyboard shortcuts
 let keybindListener = new KeybindListener("keybind-instructions");
 let keybindOptions = [];
 for (let optionId in kDefaultBindings) {
