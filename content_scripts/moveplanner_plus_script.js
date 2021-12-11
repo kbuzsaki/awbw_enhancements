@@ -55,12 +55,23 @@ function getInitialPlayerState(options, mapEntities) {
         let latestPlayer = undefined;
         let latestPlayerStartTime = 0;
         for (let playerInfo of players) {
+            let country = kCountriesByCode[playerInfo.countries_code];
             let startTime = Date.parse(playerInfo.players_turn_start);
             if (startTime > latestPlayerStartTime) {
                 latestPlayer = playerInfo;
                 latestPlayerStartTime = startTime;
             }
             playerInfo.is_current_turn = false;
+
+            if (playerInfo.users_username === undefined) {
+                playerInfo.users_username = country.name;
+            }
+            if (playerInfo.co_max_power === undefined) {
+                playerInfo.co_max_power = 270000;
+            }
+            if (playerInfo.co_max_spower === undefined) {
+                playerInfo.co_max_spower = 540000;
+            }
 
             // If income is set and non-zero, try to infer the funding level
             if (playerInfo.players_income && !fundsPerProperty) {
