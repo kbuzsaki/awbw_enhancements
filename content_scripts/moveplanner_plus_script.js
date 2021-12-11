@@ -187,10 +187,16 @@ optionsReader.onOptionsReady((options) => {
         });
 
         if (options.options_enable_move_range_preview) {
+            // TODO: handle terrainInfo being missing when opened from the map page, maybe by loading the text map?
             let terrainInfo = scrapeTerrainInfo();
-            let rangePreview = new MoveRangePreview(gamemap, terrainInfo);
-            rangePreview.updateMoveRange([]);
-            parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
+            let buildingsInfo = scrapeBuildingsInfo();
+            if (terrainInfo && buildingsInfo) {
+                let rangePreview = new MoveRangePreview(gamemap, terrainInfo, buildingsInfo);
+                rangePreview.updateMoveRange([]);
+                parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
+            } else {
+                console.log("Failed to load one of terrainInfo:", terrainInfo, "or buildingsInfo:", buildingsInfo);
+            }
         }
 
         if (options.options_enable_savestate_interception) {
