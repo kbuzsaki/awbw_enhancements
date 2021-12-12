@@ -213,15 +213,28 @@ OptionsReader.instance().onOptionsReady((options) => {
         });
 
         if (options.options_enable_move_range_preview) {
-            // TODO: handle terrainInfo being missing when opened from the map page, maybe by loading the text map?
             let terrainInfo = scrapeTerrainInfo();
             let buildingsInfo = scrapeBuildingsInfo();
+
+            let mergedTerrainInfo = undefined;
             if (terrainInfo && buildingsInfo) {
-                let rangePreview = new MoveRangePreview(gamemap, terrainInfo, buildingsInfo, players);
-                rangePreview.updateMoveRange([]);
-                parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
+                mergedTerrainInfo = mergeMatrices(terrainInfo, buildingsInfo);
             } else {
                 console.log("Failed to load one of terrainInfo:", terrainInfo, "or buildingsInfo:", buildingsInfo);
+                var urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has("maps_id")) {
+                    console.log("Falling back to fetching map text.");
+                    let mapsId = parseInt(urlParams.get("maps_id"));
+                    mergedTerrainInfo = await fetchTerrainInfo(mapsId);
+                } else {
+                    console.log("Couldn't find maps_id, failed to fetch map data.");
+                }
+            }
+
+            if (mergedTerrainInfo) {
+                let rangePreview = new MoveRangePreview(gamemap, mergedTerrainInfo, players);
+                rangePreview.updateMoveRange([]);
+                parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
             }
         }
 
