@@ -23,10 +23,12 @@ function classifyDownload(downloadItem) {
 // Use onDeterminingFilename rather than onCreated so that we can get the filename
 chrome.downloads.onDeterminingFilename.addListener((downloadItem) => {
     chrome.storage.sync.get({
+        options_enable_moveplanner_plus: true,
         options_enable_savestate_interception: true
     }, (result) => {
         console.log("interceptor with options", result, "inspecting download", downloadItem);
-        if (!result.options_enable_savestate_interception) {
+        if (!result.options_enable_moveplanner_plus
+         || !result.options_enable_savestate_interception) {
             return;
         }
 
