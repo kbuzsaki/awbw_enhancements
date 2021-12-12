@@ -220,26 +220,31 @@ let kRangeOptionsMapping = [
 let kKeyboardOptionsMapping = [
     {
         id: "rewind-turn",
+        name: "options_bindings_rewind_turn",
         default: [72 /*h*/, 38 /*up*/],
         label: "Rewind Turn",
         description: [],
     }, {
         id: "rewind-action",
+        name: "options_bindings_rewind_action",
         default: [75 /*k*/, 37 /*left*/],
         label: "Rewind Action",
         description: [],
     }, {
         id: "forward-action",
+        name: "options_bindings_forward_action",
         default: [74 /*j*/, 39 /*right*/],
         label: "Forward Action",
         description: [],
     }, {
         id: "forward-turn",
+        name: "options_bindings_forward_turn",
         default: [76 /*l*/, 40 /*down*/],
         label: "Forward Turn",
         description: [],
     }, {
         id: "toggle-calculator",
+        name: "options_bindings_toggle_calculator",
         default: [67 /*c*/],
         label: "Toggle Calculator",
         description: [
