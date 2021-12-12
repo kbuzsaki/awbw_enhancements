@@ -185,9 +185,10 @@ OptionsReader.instance().onOptionsReady((options) => {
 
         let parser = new GameStateParser(gamemap);
         let initialMapEntities = parser.parseMapEntities();
+        let baseUrl = initialMapEntities.baseUrl || "https://awbw.amarriner.com/terrain/ani/";
         let players = getInitialPlayerState(options, initialMapEntities);
 
-        let playersPanel = new PlayersPanel(replayContainer, players);
+        let playersPanel = new PlayersPanel(replayContainer, baseUrl, players);
         parser.addListener((mapEntities) => {
             playersPanel.handleUpdate(mapEntities);
         });
@@ -219,7 +220,7 @@ OptionsReader.instance().onOptionsReady((options) => {
             let savestateInterceptor = new SavestateInterceptor(options, loadStateInput, [playersPanel]);
 
             let controlsTable = document.getElementById("game-controls-table");
-            let savestateManager = new SavestateManager(controlsTable, savestateInterceptor);
+            let savestateManager = new SavestateManager(controlsTable, baseUrl, savestateInterceptor);
             playersPanel.addTurnStartListener(savestateManager.onTurnStart.bind(savestateManager));
         }
 
