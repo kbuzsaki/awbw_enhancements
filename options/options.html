@@ -93,43 +93,8 @@
         <div id="enable-moveplanner-plus-container"></div>
         <div id="enable-savestate-interception-container"></div>
         <div id="enable-move-range-preview-container"></div>
-        <div class="row mb-3">
-          <div class="col-sm-4 col-lg-3">
-            <label for="default-funding-range" class="form-label">
-                Default Funding
-            </label>
-          </div>
-          <div class="col-sm-2 col-xl-1">
-              <input type="text" readonly class="form-control" id="default-funding-preview" value="1000">
-          </div>
-          <div class="col">
-            <input type="range" min="0" max="9500" step="500" class="form-range js-requires-moveplanner-plus"
-                   id="default-funding-range">
-          </div>
-          <div class="form-text">
-            <p class="mb-2">
-            The default funding level when opening the moveplanner from a map preview rather than an ongoing game.
-            </p>
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-sm-4 col-lg-3">
-            <label for="menu-opacity-range" class="form-label">
-                Menu Opacity
-            </label>
-          </div>
-          <div class="col-sm-2 col-xl-1">
-              <input type="text" readonly class="form-control" id="menu-opacity-preview" value="0.05">
-          </div>
-          <div class="col">
-            <input type="range" min="0.15" max="1" step="0.05" class="form-range" id="menu-opacity-range">
-          </div>
-          <div class="form-text">
-            <p class="mb-2">
-            Makes the "Action Menu" and "Build Menu" partially transparent so that you can see behind them.
-            </p>
-          </div>
-        </div>
+        <div id="default-funding-range-container"></div>
+        <div id="menu-opacity-range-container"></div>
         <h3 class="mt-3">Moveplanner Bug Fixes</h3>
         <div class="form-text mb-3">
           These options control fixes for a variety of bugs in the vanilla moveplanner.

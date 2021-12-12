@@ -211,21 +211,49 @@ let kCheckOptionsMapping = [
 ];
 
 let kRangeOptionsMapping = [
-    {id: "menu-opacity-range", previewId: "menu-opacity-preview", name: "options_menu_opacity", default: 1},
-    {id: "default-funding-range", previewId: "default-funding-preview", name: "options_default_funding",
-            default: 1000}
+    {
+        id: "default-funding-range",
+        previewId: "default-funding-preview",
+        name: "options_default_funding",
+        default: 1000,
+        min: 0,
+        max: 9500,
+        step: 500,
+        label: "Default Funding",
+        description: [
+            `The default funding level when opening the moveplanner from a map preview rather than an ` +
+            `ongoing game.`
+        ],
+    }, {
+        id: "menu-opacity-range",
+        previewId: "menu-opacity-preview",
+        requires: ["js-requires-moveplanner-plus"],
+        name: "options_menu_opacity",
+        default: 1,
+        min: 0.15,
+        max: 1,
+        step: 0.05,
+        label: "Menu Opacity",
+        description: [
+            `Makes the "Action Menu" and "Build Menu" partially transparent so that you can see behind them.`
+        ],
+    }
 ];
 
 let kAllOptionsMapping = kCheckOptionsMapping.concat(kRangeOptionsMapping);
 
 
-function templateCheckboxOption(mapping) {
+function templateDescription(lines) {
     let description = "";
-    for (let i = 0; i < mapping.description.length; i++) {
-        let padding = (i === (mapping.description.length - 1)) ? 'mb-0' : 'mb-2';
-        let paragraph = mapping.description[i];
-        description += `<p class="${padding}">${paragraph}</p>`;
+    for (let i = 0; i < lines.length; i++) {
+        let padding = (i === (lines.length - 1)) ? 'mb-0' : 'mb-2';
+        description += `<p class="${padding}">${lines[i]}</p>`;
     }
+    return description;
+}
+
+function templateCheckboxOption(mapping) {
+    let description = templateDescription(mapping.description);
     let requires = (mapping.requires || []).join(" ");
 
     return `
@@ -242,15 +270,37 @@ function templateCheckboxOption(mapping) {
 
 function initializeCheckboxOptions() {
     for (let optionMapping of kCheckOptionsMapping) {
-        if (optionMapping.label !== undefined) {
-            let container = document.getElementById(optionMapping.id + "-container");
-            container.innerHTML = templateCheckboxOption(optionMapping);
-        }
+        let container = document.getElementById(optionMapping.id + "-container");
+        container.innerHTML = templateCheckboxOption(optionMapping);
     }
+}
+
+function templateRangeOption(mapping) {
+    let description = templateDescription(mapping.description);
+    let requires = (mapping.requires || []).join(" ");
+
+    return `
+<div class="row mb-3">
+  <div class="col-sm-4 col-lg-3">
+    <label for="${mapping.id}" class="form-label">${mapping.label}</label>
+  </div>
+  <div class="col-sm-2 col-xl-1">
+      <input type="text" readonly class="form-control" id="${mapping.previewId}" value="${mapping.default}">
+  </div>
+  <div class="col">
+    <input type="range" id="${mapping.id}" class="form-range ${requires}"
+           min="${mapping.min}" max="${mapping.max}" step="${mapping.step}">
+  </div>
+  <div class="form-text">${description}</div>
+</div>
+    `;
 }
 
 function initializeRangeOptions() {
     for (let optionMapping of kRangeOptionsMapping) {
+        let container = document.getElementById(optionMapping.id + "-container");
+        container.innerHTML = templateRangeOption(optionMapping);
+
         let inputElement = document.getElementById(optionMapping.id);
         let previewElement = document.getElementById(optionMapping.previewId);
         if (inputElement && previewElement) {
