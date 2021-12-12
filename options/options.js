@@ -459,6 +459,13 @@ chrome.storage.sync.get(kOptionDefaults, (result) => {
         });
     }
 
+    let resetDefaultsBtn = document.getElementById("reset-defaults-btn");
+    resetDefaultsBtn.addEventListener("click", (event) => {
+        chrome.storage.sync.set(kOptionDefaults, () => {
+            setOptionsOnPage(kOptionDefaults);
+        });
+    });
+
     let form = document.getElementById("optionsForm");
     form.classList.remove("d-none");
 });
