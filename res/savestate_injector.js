@@ -12,7 +12,24 @@
         if (url === "api/moveplanner/planner_load_state.php") {
             if (snapshotElement.hasAttribute("data")) {
                 let snapshotState = JSON.parse(snapshotElement.getAttribute("data"));
-                console.log("Found snapshot injection request, redirecting axios.post to", snapshotState);
+                console.log("Found snapshot injection request with state:", snapshotState);
+
+                // TODO: add fast path if the fog array is identical.
+                if (snapshotState.fogArray) {
+                    console.log("Detected fog array, querying server for fogImage");
+
+                    var blob = new Blob([JSON.stringify(snapshotState)], {type : 'application/json'});
+                    data.set("plannerState", new File([blob], "fake_filename.json"));
+                    return oldPost(url, data, config).then((res) => {
+                        let modifiedState = res.data;
+                        if (typeof(modifiedState) == "string") {
+                            return res;
+                        }
+
+                        snapshotState.fogImage = modifiedState.fogImage;
+                        return {data: snapshotState};
+                    });
+                }
                 snapshotElement.removeAttribute("data");
                 return new Promise((resolve, reject) => {
                     resolve({data: snapshotState});
