@@ -1,8 +1,66 @@
 const kNameOverrides = {
-    37: "Left Arrow",
-    38: "Up Arrow",
-    39: "Right Arrow",
-    40: "Down Arrow"
+    8:   "Backspace",
+    9:   "Tab",
+    13:  "Enter",
+    16:  "Shift",
+    17:  "Ctrl",
+    18:  "Alt",
+    19:  "Pause/Break",
+    20:  "Caps Lock",
+    27:  "Esc",
+    32:  "Spacebar",
+    33:  "Page Up",
+    34:  "Page Down",
+    35:  "End",
+    36:  "Home",
+    37:  "Left Arrow",
+    38:  "Up Arrow",
+    39:  "Right Arrow",
+    40:  "Down Arrow",
+    45:  "Insert",
+    46:  "Delete",
+    91:  "Left Meta",
+    92:  "Right Meta[1]",
+    93:  "Right Meta[2]",
+    96:  "Num 0",
+    97:  "Num 1",
+    98:  "Num 2",
+    99:  "Num 3",
+    100: "Num 4",
+    101: "Num 5",
+    102: "Num 6",
+    103: "Num 7",
+    104: "Num 8",
+    105: "Num 9",
+    106: "*",
+    107: "+",
+    109: "-",
+    110: ".",
+    112: "F1",
+    113: "F2",
+    114: "F3",
+    115: "F4",
+    116: "F5",
+    117: "F6",
+    118: "F7",
+    119: "F8",
+    120: "F9",
+    121: "F10",
+    122: "F11",
+    123: "F12",
+    144: "Num Lock",
+    145: "Scroll Lock",
+    186: ";",
+    187: "=",
+    188: ",",
+    189: "-",
+    190: ".",
+    191: "/",
+    192: "`",
+    219: "[",
+    220: "\\",
+    221: "]",
+    222: "'",
 };
 function keyCodeToName(keyCode) {
     keyCode = keyCode+0;
@@ -14,14 +72,21 @@ function keyCodeToName(keyCode) {
 
 class KeybindListener {
     constructor(id) {
+        this.keybindOptions = [];
         this.currentOption = undefined;
         this.keybindInstructions = document.getElementById(id);
-        let that = this;
+
         document.addEventListener("keydown", (event) => {
-            if (that.isActive()) {
-                that.handleEvent(event);
+            if (this.isActive()) {
+                this.handleEvent(event);
+                event.preventDefault();
+                event.stopPropagation();
             }
         });
+    }
+
+    addKeybindOption(keybindOption) {
+        this.keybindOptions.push(keybindOption);
     }
 
     isActive() { return this.currentOption !== undefined; }
@@ -32,14 +97,19 @@ class KeybindListener {
 
         let currentOption = this.currentOption;
         this.cancelListen();
-        currentOption.handleKeybinding(event);
+        currentOption.setKeyCode(event.keyCode);
+        for (let keybindOption of this.keybindOptions) {
+            if (keybindOption !== currentOption && keybindOption.keyCode() === event.keyCode) {
+                keybindOption.clearKeyCode();
+            }
+        }
     }
 
     listen(option) {
         this.cancelListen();
         this.currentOption = option;
 
-        let name = this.currentOption.name();
+        let name = this.currentOption.name;
         this.keybindInstructions.getElementsByTagName("span")[0].innerHTML = name;
         this.keybindInstructions.classList.remove("hidden");
     }
@@ -54,15 +124,21 @@ class KeybindListener {
 }
 
 class KeybindOption {
-    constructor(optionId, keybindListener){
+    constructor(optionId, name, keybindListener){
         this.optionId = optionId;
+        this.name = name;
         this.keybindListener = keybindListener;
 
         this.input = document.getElementById(this.optionId);
         this.input.addEventListener("click", (event) => { this.onClick(event); });
     }
 
-    name() { return this.optionId; }
+    keyCode() {
+        if (this.input.hasAttribute("rawkeycode")) {
+            return parseInt(this.input.getAttribute("rawkeycode"));
+        }
+        return undefined;
+    }
 
     onClick(event) {
         console.log("clicked:", this.optionId);
@@ -83,12 +159,16 @@ class KeybindOption {
         this.input.classList.remove("listening");
     }
 
-    handleKeybinding(event) {
-        console.log("event delivered to option: ", this.optionId);
+    setKeyCode(keyCode) {
+        this.input.value = keyCodeToName(keyCode);
+        this.input.setAttribute("rawkeycode", keyCode);
+        this.input.dispatchEvent(new Event("change"));
     }
 
-    setDisplayedBindings(bindings) {
-        let text = "";
+    clearKeyCode() {
+        this.input.value = "";
+        this.input.removeAttribute("rawkeycode");
+        this.input.dispatchEvent(new Event("change"));
     }
 }
 
@@ -344,14 +424,15 @@ function templateKeyboardOption(mapping) {
 }
 
 function initializeKeyboardOptions() {
-    // TODO: actually implement keybinding customization for keyboard shortcuts
     let keybindListener = new KeybindListener("keybind-instructions");
-    let keybindOptions = [];
     for (let optionMapping of kKeyboardOptionsMapping) {
         let container = document.getElementById(optionMapping.id + "-container");
         container.innerHTML = templateKeyboardOption(optionMapping);
 
-        keybindOptions.push(new KeybindOption(optionMapping.id + "-1", keybindListener));
+        for (let i = 1; i <= kMaxKeyboardBindings; i++) {
+            let inputId = optionMapping.id + "-" + i;
+            keybindListener.addKeybindOption(new KeybindOption(inputId, optionMapping.label, keybindListener));
+        }
     }
 }
 
@@ -447,7 +528,7 @@ chrome.storage.sync.get(kOptionDefaults, (result) => {
 
     let inputs = document.querySelectorAll("input");
     for (let input of inputs) {
-        input.addEventListener("input", (event) => {
+        input.addEventListener("change", (event) => {
             let parsedOptions = parseOptionsFromPage();
             console.log("Updating options:", parsedOptions);
             chrome.storage.sync.set(parsedOptions);
