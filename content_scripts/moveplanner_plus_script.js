@@ -46,11 +46,21 @@ function makeFakePlayerInfo(country, funds, isFirst) {
     };
 }
 
-function getInitialPlayerState(options, mapEntities) {
+async function getInitialPlayerState(options, mapEntities) {
     let propertiesByCountry =
         partitionBy(mapEntities.properties, (property) => property.country.code);
 
     let players = scrapePlayersInfo();
+
+    // If the moveplanner was loaded from a replay then the scraped players info
+    // will be incorrect, so load it from the API instead.
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("ndx")) {
+        let replayId = parseInt(urlParams.get("replays_id"));
+        let ndx = parseInt(urlParams.get("ndx"));
+        players = await fetchPlayersInfo(replayId, ndx);
+    }
+
     if (players.length !== 0) {
         let latestPlayer = undefined;
         let latestPlayerStartTime = 0;
@@ -170,7 +180,7 @@ function injectRequestedScripts(options, done) {
 OptionsReader.instance().onOptionsReady((options) => {
     injectRequestedStyles(options);
     // Inject scripts before performing other setup so that all of the patches are in place.
-    injectRequestedScripts(options, () => {
+    injectRequestedScripts(options, async () => {
         if (!options.options_enable_moveplanner_plus) {
             console.log("Moveplanner plus disabled, exiting setup");
             return;
@@ -186,7 +196,7 @@ OptionsReader.instance().onOptionsReady((options) => {
         let parser = new GameStateParser(gamemap);
         let initialMapEntities = parser.parseMapEntities();
         let baseUrl = initialMapEntities.baseUrl || "https://awbw.amarriner.com/terrain/ani/";
-        let players = getInitialPlayerState(options, initialMapEntities);
+        let players = await getInitialPlayerState(options, initialMapEntities);
 
         let playersPanel = new PlayersPanel(replayContainer, baseUrl, players);
         parser.addListener((mapEntities) => {
