@@ -1,8 +1,8 @@
 const kNameOverrides = {
-    37: "LEFT",
-    38: "UP",
-    39: "RIGHT",
-    40: "DOWN"
+    37: "Left Arrow",
+    38: "Up Arrow",
+    39: "Right Arrow",
+    40: "Down Arrow"
 };
 function keyCodeToName(keyCode) {
     keyCode = keyCode+0;
@@ -91,7 +91,6 @@ class KeybindOption {
         let text = "";
     }
 }
-
 
 
 let kCheckOptionsMapping = [
@@ -221,25 +220,25 @@ let kKeyboardOptionsMapping = [
     {
         id: "rewind-turn",
         name: "options_bindings_rewind_turn",
-        default: [72 /*h*/, 38 /*up*/],
+        default: [38 /*up*/,    72 /*h*/],
         label: "Rewind Turn",
         description: [],
     }, {
         id: "rewind-action",
         name: "options_bindings_rewind_action",
-        default: [75 /*k*/, 37 /*left*/],
+        default: [37 /*left*/,  75 /*k*/],
         label: "Rewind Action",
         description: [],
     }, {
         id: "forward-action",
         name: "options_bindings_forward_action",
-        default: [74 /*j*/, 39 /*right*/],
+        default: [39 /*right*/, 74 /*j*/],
         label: "Forward Action",
         description: [],
     }, {
         id: "forward-turn",
         name: "options_bindings_forward_turn",
-        default: [76 /*l*/, 40 /*down*/],
+        default: [40 /*down*/, 76 /*l*/],
         label: "Forward Turn",
         description: [],
     }, {
@@ -253,7 +252,7 @@ let kKeyboardOptionsMapping = [
     },
 ];
 
-let kAllOptionsMapping = kCheckOptionsMapping.concat(kRangeOptionsMapping);
+let kAllOptionsMapping = kCheckOptionsMapping.concat(kRangeOptionsMapping).concat(kKeyboardOptionsMapping);
 
 
 function templateDescription(lines) {
@@ -378,6 +377,24 @@ function setOptionsOnPage(options) {
             }
         }
     }
+
+    for (let optionMapping of kKeyboardOptionsMapping) {
+        if (options.hasOwnProperty(optionMapping.name)) {
+            let bindings = options[optionMapping.name];
+            for (let i = 0; i < kMaxKeyboardBindings; i++) {
+                let inputElement = document.getElementById(optionMapping.id + "-" + (i + 1));
+                if (inputElement) {
+                    if (i < bindings.length) {
+                        inputElement.value = keyCodeToName(bindings[i]);
+                        inputElement.setAttribute("rawkeycode", bindings[i]);
+                    } else {
+                        inputElement.value = "";
+                        inputElement.removeAttribute("rawkeycode");
+                    }
+                }
+            }
+        }
+    }
 }
 
 function parseOptionsFromPage() {
@@ -395,6 +412,19 @@ function parseOptionsFromPage() {
         if (inputElement) {
             parsedOptions[optionMapping.name] = parseFloat(inputElement.value);
         }
+    }
+
+    for (let optionMapping of kKeyboardOptionsMapping) {
+        let bindings = [];
+        for (let i = 0; i < kMaxKeyboardBindings; i++) {
+            let inputElement = document.getElementById(optionMapping.id + "-" + (i + 1));
+            if (inputElement) {
+                if (inputElement.hasAttribute("rawkeycode")) {
+                    bindings.push(parseInt(inputElement.getAttribute("rawkeycode")));
+                }
+            }
+        }
+        parsedOptions[optionMapping.name] = bindings;
     }
 
     return parsedOptions;
