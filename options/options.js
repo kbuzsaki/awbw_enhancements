@@ -238,6 +238,13 @@ let kKeyboardOptionsMapping = [
         default: [76 /*l*/, 40 /*down*/],
         label: "Forward Turn",
         description: [],
+    }, {
+        id: "toggle-calculator",
+        default: [67 /*c*/],
+        label: "Toggle Calculator",
+        description: [
+            `Keyboard shortcut for toggling the Damage Calculator. Currently only works on the moveplanner page.`,
+        ],
     },
 ];
 
@@ -315,6 +322,7 @@ function initializeRangeOptions() {
 
 const kMaxKeyboardBindings = 4;
 function templateKeyboardOption(mapping) {
+    let description = templateDescription(mapping.description);
     let bindingHtml = "";
     for (let i = 1; i <= kMaxKeyboardBindings; i++) {
         bindingHtml += `
@@ -327,6 +335,7 @@ function templateKeyboardOption(mapping) {
 <div class="row mb-3">
   <label class="col-sm-3 col-lg-2 col-form-label">${mapping.label}</label>
   ${bindingHtml}
+  <div class="form-text">${description}</div>
 </div>`;
 }
 
