@@ -10,26 +10,12 @@
   <body>
     <div class="container">
       <h1>AWBW Helper Options</h1>
-      <form id="optionsForm" action="#">
+      <form id="optionsForm" action="#" class="d-none">
         <div class="form-text">
-          Settings will only be applied when you refresh the corresponding AWBW page.
+          Note that most settings will only be applied when you refresh the corresponding AWBW page.
         </div>
         <h2 class="mt-3">Replay Keyboard Shortcuts</h2>
-        <div class="row mb-3">
-          <div class="col">
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input"
-                     id="enable-replay-shortcuts">
-              <label for="enable-replay-shortcuts" class="form-check-label">
-                Enable Replay Keyboard Shortcuts
-              </label>
-            </div>
-          </div>
-          <div class="form-text">
-            Use the keyboard to navigate forward and backward in replays rather than
-            having to click the buttons.
-          </div>
-        </div>
+        <div id="enable-replay-shortcuts-container"></div>
         <div class="row mb-3">
           <label class="col-sm-3 col-lg-2 col-form-label">
             Rewind Turn
@@ -104,71 +90,25 @@
           </span>
         </div>
         <h2 class="mt-3">Moveplanner Plus</h2>
+        <div id="enable-moveplanner-plus-container"></div>
+        <div id="enable-savestate-interception-container"></div>
+        <div id="enable-move-range-preview-container"></div>
         <div class="row mb-3">
+          <div class="col-sm-4 col-lg-3">
+            <label for="default-funding-range" class="form-label">
+                Default Funding
+            </label>
+          </div>
+          <div class="col-sm-2 col-xl-1">
+              <input type="text" readonly class="form-control" id="default-funding-preview" value="1000">
+          </div>
           <div class="col">
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input"
-                     id="enable-moveplanner-plus">
-              <label for="enable-moveplanner-plus" class="form-check-label">
-                Enable Moveplanner Plus
-              </label>
-            </div>
+            <input type="range" min="0" max="9500" step="500" class="form-range js-requires-moveplanner-plus"
+                   id="default-funding-range">
           </div>
           <div class="form-text">
             <p class="mb-2">
-            Moveplanner Plus adds "player panels" with unit count, unit value, income,
-            and funds to the moveplanner. It can also track funds over time by deducting
-            funds when units are built and adding funds income when you advance the turn.
-            </p>
-            <p class="mb-2">
-            Moveplanner Plus currently does not track power bar charge, handle repairs,
-            or correctly account for units loaded in transports.
-            </p>
-            <p class="mb-0">
-            Enabling Moveplanner Plus is required for all other features in this category, with the exception
-            of certain bug fixes.
-            </p>
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col">
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input js-requires-moveplanner-plus"
-                     id="enable-savestate-interception">
-              <label for="enable-savestate-interception" class="form-check-label">
-                Enable Savestate Interception
-              </label>
-            </div>
-          </div>
-          <div class="form-text">
-            <p class="mb-2">
-            This option enables the in-page "snapshot and restore" feature that lets you
-            make quick savestates without downloading a savestate file. It also adds AWBW Helper's
-            extra data like current funds to savestates that you download.
-            </p>
-            <p class="mb-0">
-            Disabling this feature will stop AWBW Helper from tampering with savestate downloads.
-            This is an escape hatch in case future AWBW updates temporarily break the snapshot feature.
-            </p>
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col">
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input js-requires-moveplanner-plus"
-                     id="enable-move-range-preview">
-              <label for="enable-move-range-preview" class="form-check-label">
-                  Enable Move Range Preview [Work In Progress]
-              </label>
-            </div>
-          </div>
-          <div class="form-text">
-            <p class="mb-2">
-            Adds a movement range preview when selecting units in the moveplanner.
-            </p>
-            <p class="mb-0">
-            This feature is not fully implemented yet. It does not handle CO Power movement boosts
-            and it will likely never handle fuel.
+            The default funding level when opening the moveplanner from a map preview rather than an ongoing game.
             </p>
           </div>
         </div>
@@ -190,24 +130,18 @@
             </p>
           </div>
         </div>
-        <div class="row mb-3">
-          <div class="col-sm-4 col-lg-3">
-            <label for="default-funding-range" class="form-label">
-                Default Funding
-            </label>
-          </div>
-          <div class="col-sm-2 col-xl-1">
-              <input type="text" readonly class="form-control" id="default-funding-preview" value="1000">
-          </div>
-          <div class="col">
-            <input type="range" min="0" max="9500" step="500" class="form-range" id="default-funding-range">
-          </div>
-          <div class="form-text">
-            <p class="mb-2">
-            The default funding level when opening the moveplanner from a map preview rather than an ongoing game.
-            </p>
-          </div>
+        <h3 class="mt-3">Moveplanner Bug Fixes</h3>
+        <div class="form-text mb-3">
+          These options control fixes for a variety of bugs in the vanilla moveplanner.
+          They shouldn't have any negative effects, but you can disable them here as an escape hatch if they
+          do break something, or if the underlying bugs are fixed in the future and the additional fix causes
+          problems.
         </div>
+        <div id="enable-bugfix-unwait-all-container"></div>
+        <div id="enable-bugfix-wait-mismatch-container"></div>
+        <div id="enable-bugfix-extra-capture-icons-container"></div>
+        <div id="enable-bugfix-encoded-sprite-urls-container"></div>
+        <div id="enable-bugfix-missing-units-players-id-container"></div>
       </form>
     </div>
     <script src="/options/options.js"></script>

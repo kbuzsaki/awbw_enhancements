@@ -118,10 +118,96 @@ for (let optionId in kDefaultBindings) {
 
 
 let kCheckOptionsMapping = [
-    {id: "enable-replay-shortcuts",       name: "options_enable_replay_shortcuts",       default: true},
-    {id: "enable-moveplanner-plus",       name: "options_enable_moveplanner_plus",       default: true},
-    {id: "enable-savestate-interception", name: "options_enable_savestate_interception", default: true},
-    {id: "enable-move-range-preview",     name: "options_enable_move_range_preview",     default: false},
+    {
+        id: "enable-replay-shortcuts",
+        name: "options_enable_replay_shortcuts",
+        default: true,
+        label: "Enable Replay Keyboard Shortcuts",
+        description: [
+            "Use the keyboard to navigate forward and backward in replays rather than having " +
+            "to click the buttons."
+        ],
+    }, {
+        id: "enable-moveplanner-plus",
+        name: "options_enable_moveplanner_plus",
+        default: true,
+        label: "Enable Moveplanner Plus",
+        description: [
+            `Moveplanner Plus adds "player panels" with unit count, unit value, income, and funds to ` +
+            `the moveplanner. It can also track funds over time by deducting funds when units are built ` +
+            `and adding funds income when you advance the turn.`,
+            `Moveplanner Plus currently does not track power bar charge, handle repairs, or correctly ` +
+            `account for units loaded in transports.`,
+            `Enabling Moveplanner Plus is required for all other features in this category, with the ` +
+            `exception of certain bug fixes.`
+        ],
+    }, {
+        id: "enable-savestate-interception",
+        name: "options_enable_savestate_interception",
+        requires: ["js-requires-moveplanner-plus"],
+        default: true,
+        label: "Enable Enhanced Savestates",
+        description: [
+            `This option enables the in-page "snapshot and restore" feature that lets you make quick ` +
+            `savestates without downloading a savestate file. It also adds AWBW Helper's extra data ` +
+            `like current funds to savestates that you download.`,
+            `Disabling this feature will stop AWBW Helper from tampering with savestate downloads. ` +
+            `This is an escape hatch in case future AWBW updates temporarily break the snapshot feature.`,
+        ],
+    }, {
+        id: "enable-move-range-preview",
+        name: "options_enable_move_range_preview",
+        requires: ["js-requires-moveplanner-plus"],
+        default: false,
+        label: "Enable Move Range Preview [Work in Progress]",
+        description: [
+            `Adds a movement range preview when selecting units in the moveplanner.`,
+            `This feature is not fully implemented yet. It does not handle CO Power movement boosts ` +
+            `and it will likely never handle fuel.`
+        ],
+    }, {
+        id: "enable-bugfix-unwait-all",
+        name: "options_enable_bugfix_unwait_all",
+        default: true,
+        label: 'Fix "Unwait All" for Moved Units',
+        description: [
+            `Fixes the "Unwait All" button not unwaiting units that were already moved that turn before ` +
+            `the moveplanner was opened.`
+        ],
+    }, {
+        id: "enable-bugfix-wait-mismatch",
+        name: "options_enable_bugfix_wait_mismatch",
+        default: true,
+        label: 'Fix Waited Units Showing as Unwaited',
+        description: [
+            `Fixes the bug where the most recently moved unit in a game sometimes shows as unwaited.`
+        ],
+    }, {
+        id: "enable-bugfix-extra-capture-icons",
+        name: "options_enable_bugfix_extra_capture_icons",
+        default: true,
+        label: 'Fix Extra "Capture" Icons',
+        description: [
+            `Fixes extra "capture" icons being displayed for infantry that already finished capturing.`
+        ],
+    }, {
+        // TODO: implement this bugfix in unitsinfo_patcher.js
+        id: "enable-bugfix-encoded-sprite-urls",
+        name: "options_enable_bugfix_encoded_sprite_urls",
+        default: true,
+        label: 'Fix Broken Black Boat Sprites',
+        description: [
+            `Fixes Black Boat sprites displaying incorrectly after savestate reload.`,
+        ],
+    }, {
+        id: "enable-bugfix-missing-units-players-id",
+        name: "options_enable_bugfix_missing_units_players_id",
+        default: true,
+        label: 'Fix Damage Calculator Selection',
+        description: [
+            `Fixes the bug where units built in the moveplanner cannot be selected with the damage calculator.`
+        ],
+    },
 ];
 
 let kRangeOptionsMapping = [
@@ -132,15 +218,48 @@ let kRangeOptionsMapping = [
 
 let kAllOptionsMapping = kCheckOptionsMapping.concat(kRangeOptionsMapping);
 
-for (let optionMapping of kRangeOptionsMapping) {
-    let inputElement = document.getElementById(optionMapping.id);
-    let previewElement = document.getElementById(optionMapping.previewId);
-    if (inputElement && previewElement) {
-        inputElement.addEventListener("input", () => {
-            previewElement.value = inputElement.value;
-        });
+
+function templateCheckboxOption(mapping) {
+    let description = "";
+    for (let i = 0; i < mapping.description.length; i++) {
+        let padding = (i === (mapping.description.length - 1)) ? 'mb-0' : 'mb-2';
+        let paragraph = mapping.description[i];
+        description += `<p class="${padding}">${paragraph}</p>`;
     }
-    previewElement.value = inputElement.value;
+    let requires = (mapping.requires || []).join(" ");
+
+    return `
+<div class="row mb-3">
+  <div class="col">
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input ${requires}" id="${mapping.id}">
+      <label for="${mapping.id}" class="form-check-label">${mapping.label}</label>
+    </div>
+  </div>
+  <div class="form-text">${description}</div>
+</div>`;
+}
+
+function initializeCheckboxOptions() {
+    for (let optionMapping of kCheckOptionsMapping) {
+        if (optionMapping.label !== undefined) {
+            let container = document.getElementById(optionMapping.id + "-container");
+            container.innerHTML = templateCheckboxOption(optionMapping);
+        }
+    }
+}
+
+function initializeRangeOptions() {
+    for (let optionMapping of kRangeOptionsMapping) {
+        let inputElement = document.getElementById(optionMapping.id);
+        let previewElement = document.getElementById(optionMapping.previewId);
+        if (inputElement && previewElement) {
+            inputElement.addEventListener("input", () => {
+                previewElement.value = inputElement.value;
+            });
+        }
+        previewElement.value = inputElement.value;
+    }
 }
 
 function setOptionsOnPage(options) {
@@ -187,6 +306,9 @@ function parseOptionsFromPage() {
     return parsedOptions;
 }
 
+initializeCheckboxOptions();
+initializeRangeOptions();
+
 let kOptionDefaults = Object.fromEntries(kAllOptionsMapping.map(
     (optionMapping) => [optionMapping.name, optionMapping.default]));
 
@@ -211,4 +333,7 @@ chrome.storage.sync.get(kOptionDefaults, (result) => {
             }
         });
     }
+
+    let form = document.getElementById("optionsForm");
+    form.classList.remove("d-none");
 });
