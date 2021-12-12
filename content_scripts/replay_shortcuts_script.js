@@ -1,10 +1,3 @@
-const kDefaultBindings = {
-    "rewind-turn": [72 /*h*/, 38 /*up*/],
-    "rewind-action": [75 /*k*/, 37 /*left*/],
-    "forward-action": [74 /*j*/, 39 /*right*/],
-    "forward-turn": [76 /*l*/, 40 /*down*/],
-};
-
 function convertBindingsToMapping(bindings) {
     let newMapping = {};
     for (let binding in bindings) {
@@ -15,18 +8,30 @@ function convertBindingsToMapping(bindings) {
     return newMapping;
 }
 
-OptionsReader.instance().onOptionsReady((result) => {
-    if (!result.options_enable_replay_shortcuts) {
-        console.log("Repaly keyboard shortcuts disabled.");
+function getMappingFromOptions(options) {
+    let bindings = {
+        "rewind-turn":    options.options_bindings_rewind_turn || [],
+        "rewind-action":  options.options_bindings_rewind_action || [],
+        "forward-action": options.options_bindings_forward_action || [],
+        "forward-turn":   options.options_bindings_forward_turn || [],
+    };
+
+    return convertBindingsToMapping(bindings);
+}
+
+OptionsReader.instance().onOptionsReady((options) => {
+    if (!options.options_enable_replay_shortcuts) {
+        console.log("Replay keyboard shortcuts disabled.");
         return;
     }
 
-    let mapping = convertBindingsToMapping(kDefaultBindings);
+    let mapping = getMappingFromOptions(options);
+    console.log("Replay shortcuts using mapping:", mapping);
 
-    let rewindTurn = document.getElementsByClassName("replay-backward")[0];
-    let rewindAction = document.getElementsByClassName("replay-backward-action")[0];
-    let forwardAction = document.getElementsByClassName("replay-forward-action")[0];
-    let forwardTurn = document.getElementsByClassName("replay-forward")[0];
+    let rewindTurn = document.querySelector(".replay-backward");
+    let rewindAction = document.querySelector(".replay-backward-action");
+    let forwardAction = document.querySelector(".replay-forward-action");
+    let forwardTurn = document.querySelector(".replay-forward");
 
     function handleKeyDown(event) {
         // The "game page" and the "replay page" are actually the same page,
