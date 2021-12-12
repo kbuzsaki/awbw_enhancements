@@ -12,22 +12,6 @@ function keyCodeToName(keyCode) {
     return other;
 }
 
-const kDefaultBindings = {
-    "rewind-turn": [72 /*h*/, 38 /*up*/],
-    "rewind-action": [75 /*k*/, 37 /*left*/],
-    "forward-action": [74 /*j*/, 39 /*right*/],
-    "forward-turn": [76 /*l*/, 40 /*down*/],
-};
-const kDefaultOptions = {
-    "bindings": kDefaultBindings
-};
-
-const options = {};
-chrome.storage.sync.get({options: kDefaultOptions}, function(data) {
-    console.log("Got result: ", data);
-    Object.assign(options, data.options);
-});
-
 class KeybindListener {
     constructor(id) {
         this.currentOption = undefined;
@@ -108,13 +92,6 @@ class KeybindOption {
     }
 }
 
-
-// TODO: actually implement keybinding customization for keyboard shortcuts
-let keybindListener = new KeybindListener("keybind-instructions");
-let keybindOptions = [];
-for (let optionId in kDefaultBindings) {
-    keybindOptions.push(new KeybindOption(optionId + "-1", keybindListener));
-}
 
 
 let kCheckOptionsMapping = [
@@ -240,6 +217,30 @@ let kRangeOptionsMapping = [
     }
 ];
 
+let kKeyboardOptionsMapping = [
+    {
+        id: "rewind-turn",
+        default: [72 /*h*/, 38 /*up*/],
+        label: "Rewind Turn",
+        description: [],
+    }, {
+        id: "rewind-action",
+        default: [75 /*k*/, 37 /*left*/],
+        label: "Rewind Action",
+        description: [],
+    }, {
+        id: "forward-action",
+        default: [74 /*j*/, 39 /*right*/],
+        label: "Forward Action",
+        description: [],
+    }, {
+        id: "forward-turn",
+        default: [76 /*l*/, 40 /*down*/],
+        label: "Forward Turn",
+        description: [],
+    },
+];
+
 let kAllOptionsMapping = kCheckOptionsMapping.concat(kRangeOptionsMapping);
 
 
@@ -312,6 +313,35 @@ function initializeRangeOptions() {
     }
 }
 
+const kMaxKeyboardBindings = 4;
+function templateKeyboardOption(mapping) {
+    let bindingHtml = "";
+    for (let i = 1; i <= kMaxKeyboardBindings; i++) {
+        bindingHtml += `
+<div class="col">
+  <input type="text" readonly class="form-control" id="${mapping.id}-${i}">
+</div>`;
+    }
+
+    return `
+<div class="row mb-3">
+  <label class="col-sm-3 col-lg-2 col-form-label">${mapping.label}</label>
+  ${bindingHtml}
+</div>`;
+}
+
+function initializeKeyboardOptions() {
+    // TODO: actually implement keybinding customization for keyboard shortcuts
+    let keybindListener = new KeybindListener("keybind-instructions");
+    let keybindOptions = [];
+    for (let optionMapping of kKeyboardOptionsMapping) {
+        let container = document.getElementById(optionMapping.id + "-container");
+        container.innerHTML = templateKeyboardOption(optionMapping);
+
+        keybindOptions.push(new KeybindOption(optionMapping.id + "-1", keybindListener));
+    }
+}
+
 function setOptionsOnPage(options) {
     for (let optionMapping of kCheckOptionsMapping) {
         if (options.hasOwnProperty(optionMapping.name)) {
@@ -358,6 +388,7 @@ function parseOptionsFromPage() {
 
 initializeCheckboxOptions();
 initializeRangeOptions();
+initializeKeyboardOptions();
 
 let kOptionDefaults = Object.fromEntries(kAllOptionsMapping.map(
     (optionMapping) => [optionMapping.name, optionMapping.default]));
