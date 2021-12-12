@@ -32,6 +32,19 @@
 
             let span = document.getElementById("unit_" + unitId);
             if (span) {
+                let imgs = span.getElementsByTagName("img");
+                // Need to patch broken black boat sprite before wait fixing waited-ness of the sprite
+                // so that the name parsing works correctly there.
+                if (options.options_enable_bugfix_encoded_sprite_urls) {
+                    // Patch broken black boat sprite
+                    for (let img of imgs) {
+                        if (img.src.indexOf("%20") !== -1) {
+                            console.log("patching suspected broken img url:", img.src);
+                            img.src = img.src.replace("%20", "");
+                        }
+                    }
+                }
+
                 if (options.options_enable_bugfix_wait_mismatch) {
                     // This feels janky, but it's what the moveplanner code does?
                     let unitImg = span.firstChild;
@@ -51,7 +64,6 @@
                     }
                 }
 
-                let imgs = span.getElementsByTagName("img");
                 if (options.options_enable_bugfix_extra_capture_icons) {
                     for (let img of imgs) {
                         // TODO: refine / de-jank this? Should players be able to force it?
@@ -70,15 +82,6 @@
                             } else {
                                 // State matches up
                             }
-                        }
-                    }
-                }
-                if (options.options_enable_bugfix_encoded_sprite_urls) {
-                    // Patch broken black boat sprite
-                    for (let img of imgs) {
-                        if (img.src.indexOf("%20") !== -1) {
-                            console.log("patching suspected broken img url:", img.src);
-                            img.src = img.src.replace("%20", "");
                         }
                     }
                 }
