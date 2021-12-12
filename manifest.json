@@ -54,8 +54,8 @@
         {
             "matches": ["https://awbw.amarriner.com/*"],
             "resources": [
-                "savestate_injector.js",
-                "unitsinfo_patcher.js"
+                "/res/savestate_injector.js",
+                "/res/unitsinfo_patcher.js"
             ]
         }
     ]
