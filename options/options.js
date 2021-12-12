@@ -248,7 +248,7 @@ let kKeyboardOptionsMapping = [
         default: [67 /*c*/],
         label: "Toggle Calculator",
         description: [
-            `Keyboard shortcut for toggling the Damage Calculator. Currently only works on the moveplanner page.`,
+            `Keyboard shortcut for toggling the Damage Calculator. Also works on the game page.`,
         ],
     },
 ];

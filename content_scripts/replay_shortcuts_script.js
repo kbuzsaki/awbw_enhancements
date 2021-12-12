@@ -15,8 +15,7 @@ function convertBindingsToMapping(bindings) {
     return newMapping;
 }
 
-let optionsReader = new OptionsReader();
-optionsReader.onOptionsReady((result) => {
+OptionsReader.instance().onOptionsReady((result) => {
     if (!result.options_enable_replay_shortcuts) {
         console.log("Repaly keyboard shortcuts disabled.");
         return;
