@@ -7,9 +7,7 @@
         "service_worker": "background/service_worker.js"
     },
     "permissions": [
-        "activeTab",
         "downloads",
-        "scripting",
         "storage"
     ],
     "host_permissions": [
