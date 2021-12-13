@@ -8,6 +8,7 @@
     console.log("Patcher observed options:", options);
     console.log("Patcher observed unitMap:", unitMap);
     console.log("Patcher observed unitsInfo:", unitsInfo);
+    console.log("Patcher observed buildingsInfo:", buildingsInfo);
 
     function patchUnitsInfo() {
         for (let unitId in unitsInfo) {
