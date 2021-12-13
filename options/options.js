@@ -214,12 +214,11 @@ let kCheckOptionsMapping = [
         id: "enable-move-range-preview",
         name: "options_enable_move_range_preview",
         requires: ["js-requires-moveplanner-plus"],
-        default: false,
-        label: "Enable Move Range Preview [Work in Progress]",
+        default: true,
+        label: "Enable Move Range Preview",
         description: [
             `Adds a movement range preview when selecting units in the moveplanner.`,
-            `This feature is not fully implemented yet. It does not handle CO Power movement boosts ` +
-            `and it will likely never handle fuel.`
+            `Note that this preview does not take into account fuel consumption.`
         ],
     }, {
         id: "enable-bugfix-unwait-all",
@@ -227,7 +226,7 @@ let kCheckOptionsMapping = [
         default: true,
         label: 'Fix "Unwait All" for Moved Units',
         description: [
-            `Fixes the "Unwait All" button not unwaiting units that were already moved that turn before ` +
+            `Fixes the "Unwait All" button not unwaiting units that were already moved that turn, before ` +
             `the moveplanner was opened.`
         ],
     }, {
