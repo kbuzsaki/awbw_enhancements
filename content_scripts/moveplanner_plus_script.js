@@ -189,7 +189,7 @@ OptionsReader.instance().onOptionsReady((options) => {
         let gamemap = document.getElementById("gamemap");
         let replayContainer = document.getElementById("replay-container");
         if (!gamemap || !replayContainer) {
-            console.log("Failed to find gamemap (", gamemap, ") or replayContainer (", replayContainer, ")");
+            reportError("Failed to find gamemap (", gamemap, ") or replayContainer (", replayContainer, ")");
             return;
         }
 
@@ -228,7 +228,7 @@ OptionsReader.instance().onOptionsReady((options) => {
                     let mapsId = parseInt(urlParams.get("maps_id"));
                     mergedTerrainInfo = await fetchTerrainInfo(mapsId);
                 } else {
-                    console.log("Couldn't find maps_id, failed to fetch map data.");
+                    reportError("Couldn't find maps_id, failed to fetch map data.");
                 }
             }
 
