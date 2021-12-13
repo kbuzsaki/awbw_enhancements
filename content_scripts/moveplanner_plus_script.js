@@ -198,7 +198,8 @@ OptionsReader.instance().onOptionsReady((options) => {
         let baseUrl = initialMapEntities.baseUrl || "https://awbw.amarriner.com/terrain/ani/";
         let players = await getInitialPlayerState(options, initialMapEntities);
 
-        let playersPanel = new PlayersPanel(replayContainer, baseUrl, players);
+        let profileSettingsReader = await ProfileSettingsReader.instance();
+        let playersPanel = new PlayersPanel(replayContainer, baseUrl, profileSettingsReader, players);
         parser.addListener((mapEntities) => {
             playersPanel.handleUpdate(mapEntities);
         });

@@ -37,6 +37,7 @@
                 "lib/util.js",
                 "lib/game_data.js",
                 "lib/options_reader.js",
+                "lib/profile_settings_reader.js",
                 "lib/game_state_parser.js",
                 "lib/build_menu_listener.js",
                 "lib/move_range_preview.js",
