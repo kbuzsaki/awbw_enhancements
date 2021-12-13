@@ -69,12 +69,20 @@
                         // TODO: refine / de-jank this? Should players be able to force it?
                         if (img.src.indexOf("capture") !== -1) {
                             // Check if the capture is valid
-                            let building = buildingsInfo[unit.units_x][unit.units_y];
+                            let building = buildingsInfo[unit.units_x]?.[unit.units_y];
                             if (!building) {
-                                console.log("removing capture indicator unit that is not on property:", unit);
+                                console.log("removing capture indicator for unit that is not on property:", unit);
                                 img.remove();
-                            } else if (unit.countries_code === building.countries_code) {
-                                console.log("removing capture indicator for owned property:", unit);
+                                continue;
+                            }
+
+                            let buildingCountriesCode = building.countries_code;
+                            if (building.hasOwnProperty("terrain_country_code")) {
+                                buildingCountriesCode = building.terrain_country_code;
+                            }
+
+                            if (unit.countries_code === buildingCountriesCode) {
+                                console.log("removing capture indicator for unit on owned property:", unit);
                                 img.remove();
                             } else if (unit.units_capture !== 1) {
                                 console.log("patching units_capture for unit:", unit);
