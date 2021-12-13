@@ -198,6 +198,16 @@ let kCheckOptionsMapping = [
             `exception of certain bug fixes.`
         ],
     }, {
+        id: "enable-move-range-preview",
+        name: "options_enable_move_range_preview",
+        requires: ["js-requires-moveplanner-plus"],
+        default: true,
+        label: "Enable Move Range Preview",
+        description: [
+            `Adds a movement range preview when selecting units in the moveplanner.`,
+            `Note that this preview does not take into account fuel consumption.`
+        ],
+    }, {
         id: "enable-savestate-interception",
         name: "options_enable_savestate_interception",
         requires: ["js-requires-moveplanner-plus"],
@@ -211,14 +221,12 @@ let kCheckOptionsMapping = [
             `This is an escape hatch in case future AWBW updates temporarily break the snapshot feature.`,
         ],
     }, {
-        id: "enable-move-range-preview",
-        name: "options_enable_move_range_preview",
-        requires: ["js-requires-moveplanner-plus"],
+        id: "enable-bugfix-wait-mismatch",
+        name: "options_enable_bugfix_wait_mismatch",
         default: true,
-        label: "Enable Move Range Preview",
+        label: 'Fix Waited Units Showing as Unwaited',
         description: [
-            `Adds a movement range preview when selecting units in the moveplanner.`,
-            `Note that this preview does not take into account fuel consumption.`
+            `Fixes the bug where the most recently moved unit in a game sometimes shows as unwaited.`
         ],
     }, {
         id: "enable-bugfix-unwait-all",
@@ -230,12 +238,12 @@ let kCheckOptionsMapping = [
             `the moveplanner was opened.`
         ],
     }, {
-        id: "enable-bugfix-wait-mismatch",
-        name: "options_enable_bugfix_wait_mismatch",
+        id: "enable-bugfix-missing-units-players-id",
+        name: "options_enable_bugfix_missing_units_players_id",
         default: true,
-        label: 'Fix Waited Units Showing as Unwaited',
+        label: 'Fix Damage Calculator Selection',
         description: [
-            `Fixes the bug where the most recently moved unit in a game sometimes shows as unwaited.`
+            `Fixes the bug where units built in the moveplanner cannot be selected with the damage calculator.`
         ],
     }, {
         id: "enable-bugfix-extra-capture-icons",
@@ -246,21 +254,12 @@ let kCheckOptionsMapping = [
             `Fixes extra "capture" icons being displayed for infantry that already finished capturing.`
         ],
     }, {
-        // TODO: implement this bugfix in unitsinfo_patcher.js
         id: "enable-bugfix-encoded-sprite-urls",
         name: "options_enable_bugfix_encoded_sprite_urls",
         default: true,
         label: 'Fix Broken Black Boat Sprites',
         description: [
             `Fixes Black Boat sprites displaying incorrectly after savestate reload.`,
-        ],
-    }, {
-        id: "enable-bugfix-missing-units-players-id",
-        name: "options_enable_bugfix_missing_units_players_id",
-        default: true,
-        label: 'Fix Damage Calculator Selection',
-        description: [
-            `Fixes the bug where units built in the moveplanner cannot be selected with the damage calculator.`
         ],
     },
 ];
