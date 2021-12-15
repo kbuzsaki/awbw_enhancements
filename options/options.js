@@ -295,7 +295,7 @@ let kRangeOptionsMapping = [
         previewId: "menu-opacity-preview",
         requires: ["js-requires-moveplanner-plus"],
         name: "options_menu_opacity",
-        default: 1,
+        default: 0.75,
         min: 0.15,
         max: 1,
         step: 0.05,
