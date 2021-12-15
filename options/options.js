@@ -71,10 +71,18 @@ function keyCodeToName(keyCode) {
 }
 
 class KeybindListener {
-    constructor(id) {
+    constructor(modalId) {
         this.keybindOptions = [];
         this.currentOption = undefined;
-        this.keybindInstructions = document.getElementById(id);
+        this.modalElement = document.getElementById(modalId);
+        this.modal = bootstrap.Modal.getOrCreateInstance(this.modalElement);
+
+        this.modalElement.addEventListener("hidden.bs.modal", (event) => {
+            this.cancelListen();
+        });
+        document.getElementById("clear-binding-btn").addEventListener("click", (event) => {
+            this.handleClear();
+        });
 
         document.addEventListener("keydown", (event) => {
             if (this.isActive()) {
@@ -105,21 +113,30 @@ class KeybindListener {
         }
     }
 
+    handleClear() {
+        let currentOption = this.currentOption;
+        this.cancelListen();
+        currentOption.clearKeyCode();
+    }
+
     listen(option) {
         this.cancelListen();
         this.currentOption = option;
 
         let name = this.currentOption.name;
-        this.keybindInstructions.getElementsByTagName("span")[0].innerHTML = name;
-        this.keybindInstructions.classList.remove("hidden");
+        let currentKey = this.currentOption.input.value || "None";
+        let spans = this.modalElement.querySelectorAll(".modal-body span");
+        spans[0].innerHTML = name;
+        spans[1].innerHTML = currentKey;
+
+        this.modal.show();
     }
 
     cancelListen() {
-        if (this.currentOption !== undefined) {
-            this.currentOption.cancelListen();
+        if (this.modalElement.classList.contains("show")) {
+            this.modal.hide();
         }
         this.currentOption = undefined;
-        this.keybindInstructions.classList.add("hidden");
     }
 }
 
@@ -151,12 +168,7 @@ class KeybindOption {
     }
 
     startListen() {
-        this.input.classList.add("listening");
         this.keybindListener.listen(this);
-    }
-
-    cancelListen() {
-        this.input.classList.remove("listening");
     }
 
     setKeyCode(keyCode) {
@@ -422,7 +434,7 @@ function templateKeyboardOption(mapping) {
 }
 
 function initializeKeyboardOptions() {
-    let keybindListener = new KeybindListener("keybind-instructions");
+    let keybindListener = new KeybindListener("keybinding-modal");
     for (let optionMapping of kKeyboardOptionsMapping) {
         let container = document.getElementById(optionMapping.id + "-container");
         container.innerHTML = templateKeyboardOption(optionMapping);
