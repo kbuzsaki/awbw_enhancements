@@ -554,6 +554,7 @@ chrome.storage.sync.get(kOptionDefaults, (result) => {
     resetDefaultsBtn.addEventListener("click", (event) => {
         chrome.storage.sync.set(kOptionDefaults, () => {
             setOptionsOnPage(kOptionDefaults);
+            inputs[0].dispatchEvent(new Event("change"));
         });
     });
 
