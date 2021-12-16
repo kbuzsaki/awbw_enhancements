@@ -155,7 +155,9 @@ function injectRequestedScripts(options, done) {
 
     // TODO: add settings for controlling which patches are injected?
     let scripts = [];
-    scripts.push("/res/savestate_injector.js");
+    if (options.options_enable_savestate_interception) {
+        scripts.push("/res/savestate_injector.js");
+    }
     scripts.push("/res/unitsinfo_patcher.js#" + JSON.stringify(options));
     console.log("Injecting requested scripts:", scripts);
 
