@@ -247,6 +247,7 @@ OptionsReader.instance().onOptionsReady((options) => {
 
             let controlsTable = document.getElementById("game-controls-table");
             let savestateManager = new SavestateManager(controlsTable, baseUrl, savestateInterceptor);
+            savestateInterceptor.addOnUploadListener(savestateManager.onSavestateUpload.bind(savestateManager));
             playersPanel.addTurnStartListener(savestateManager.onTurnStart.bind(savestateManager));
         }
 
