@@ -1,7 +1,7 @@
 {
     "name": "AWBW Helper",
     "description": "Replay keyboard shortcuts and moveplanner enhancements for Advance Wars By Web.",
-    "version": "2021.12.16.0",
+    "version": "2021.12.17.0",
     "manifest_version": 3,
     "background": {
         "service_worker": "background/service_worker.js"
