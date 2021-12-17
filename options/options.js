@@ -281,6 +281,15 @@ let kCheckOptionsMapping = [
         description: [
             `Fixes Sonja '?' HP displaying incorrectly after savestate reload.`,
         ],
+    }, {
+        id: "enable-bugfix-revealed-neutral-fog-buildings",
+        name: "options_enable_bugfix_revealed_neutral_fog_buildings",
+        default: true,
+        label: 'Fix Properties Incorrectly Displaying as Revealed',
+        description: [
+            `Fixes properties that are hidden in fog being displayed as "revealed" properties after ` +
+            `savestate load rather than "hidden" properties.`,
+        ],
     },
 ];
 

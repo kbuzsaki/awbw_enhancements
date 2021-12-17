@@ -10,6 +10,17 @@
     console.log("Patcher observed unitsInfo:", unitsInfo);
     console.log("Patcher observed buildingsInfo:", buildingsInfo);
 
+    function getUrlWithWaitedState(url, waited) {
+        return url.replace(/["a-z-._"]+.gif/, (match) => {
+            if (waited && !match.match("gs_")) {
+                return "gs_" + match;
+            } else if (!waited && match.match("gs_")) {
+                return match.replace("gs_", "");
+            }
+            return match;
+        });
+    }
+
     function patchUnitsInfo() {
         for (let unitId in unitsInfo) {
             let unit = unitsInfo[unitId];
@@ -62,14 +73,7 @@
                     let unitImg = span.firstChild;
                     if (unitImg) {
                         // Make sure that the unit's image reflects its waited state.
-                        let fixedUnitImgSrc = unitImg.src.replace(/["a-z-._"]+.gif/, (match) => {
-                            if (unit.moved && !match.match("gs_")) {
-                                return "gs_" + match;
-                            } else if (!unit.moved && match.match("gs_")) {
-                                return match.replace("gs_", "");
-                            }
-                            return match;
-                        });
+                        let fixedUnitImgSrc = getUrlWithWaitedState(unitImg.src, unit.moved);
                         if (unitImg.src !== fixedUnitImgSrc) {
                             unitImg.src = fixedUnitImgSrc;
                         }
@@ -108,6 +112,39 @@
             }
         }
     }
+    function isHidableInFog(building_url) {
+        const kGoodFragments = ["neutral", "hq", "rubble", "silo"];
+        for (let fragment of kGoodFragments) {
+            if (building_url.indexOf(fragment) !== -1) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function patchBuildings() {
+        if (options.options_enable_bugfix_revealed_neutral_fog_buildings) {
+            if (buildingsInfo && fogArray) {
+                for (let x in buildingsInfo) {
+                    let col = buildingsInfo[x];
+                    for (let y in col) {
+                        let building = col[y];
+                        let fogValue = fogArray?.[x]?.[y];
+                        if (fogValue === 0) {
+                            let buildingElement = document.getElementById("building_" + building.buildings_id);
+                            if (buildingElement) {
+                                let img = buildingElement.firstChild;
+                                if (img && img.src && isHidableInFog(img.src)) {
+                                    console.log("Patching building that should be in fog:", building);
+                                    let fixedImgSrc = getUrlWithWaitedState(img.src, /*waited=*/true);
+                                    img.src = fixedImgSrc;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     // Patch the unitsInfo data structure when units are added to the map.
     let gamemap = document.getElementById("gamemap");
@@ -122,9 +159,11 @@
         }
 
         patchUnitsInfo();
+        patchBuildings();
     });
     observer.observe(gamemap, {subtree: true, childList: true});
 
     // Trigger initial patching even without any events.
     patchUnitsInfo();
+    patchBuildings();
 })();
