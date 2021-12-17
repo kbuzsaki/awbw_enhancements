@@ -24,6 +24,7 @@
         {
             "matches": ["https://awbw.amarriner.com/2030.php*"],
             "js": [
+                "options/options_definitions.js",
                 "lib/options_reader.js",
                 "content_scripts/toggle_calculator_shortcut_script.js",
                 "content_scripts/replay_shortcuts_script.js"
@@ -34,6 +35,7 @@
             "js": [
                 "lib/util.js",
                 "lib/game_data.js",
+                "options/options_definitions.js",
                 "lib/options_reader.js",
                 "lib/profile_settings_reader.js",
                 "lib/game_state_parser.js",
