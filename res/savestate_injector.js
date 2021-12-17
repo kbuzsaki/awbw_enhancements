@@ -12,6 +12,7 @@
         if (url === "api/moveplanner/planner_load_state.php") {
             if (snapshotElement.hasAttribute("data")) {
                 let snapshotState = JSON.parse(snapshotElement.getAttribute("data"));
+                snapshotElement.removeAttribute("data");
                 console.log("Found snapshot injection request with state:", snapshotState);
 
                 // TODO: add fast path if the fog array is identical.
@@ -30,7 +31,6 @@
                         return {data: snapshotState};
                     });
                 }
-                snapshotElement.removeAttribute("data");
                 return new Promise((resolve, reject) => {
                     resolve({data: snapshotState});
                 });
