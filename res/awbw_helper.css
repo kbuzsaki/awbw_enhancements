@@ -164,7 +164,7 @@
 
 .awbwhelper-sidebar-container {
     height: 896px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .awbwhelper-sidebar-entry {
