@@ -273,6 +273,14 @@ let kCheckOptionsMapping = [
         description: [
             `Fixes Black Boat sprites displaying incorrectly after savestate reload.`,
         ],
+    }, {
+        id: "enable-bugfix-broken-sonja-hp",
+        name: "options_enable_bugfix_broken_sonja_hp",
+        default: true,
+        label: 'Fix Broken Sonja HP',
+        description: [
+            `Fixes Sonja '?' HP displaying incorrectly after savestate reload.`,
+        ],
     },
 ];
 

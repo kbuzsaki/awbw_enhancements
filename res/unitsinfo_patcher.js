@@ -46,6 +46,17 @@
                     }
                 }
 
+                // The savestate restore constructs the image URL with concatenation, but the actual
+                // question mark HP sprite has a different name.
+                if (options.options_enable_bugfix_broken_sonja_hp) {
+                    for (let img of imgs) {
+                        if (img.src.endsWith("/?.gif")) {
+                            let fixedHpImgSrc = img.src.replace("/?.gif", "/qhp.gif");
+                            img.src = fixedHpImgSrc;
+                        }
+                    }
+                }
+
                 if (options.options_enable_bugfix_wait_mismatch) {
                     // This feels janky, but it's what the moveplanner code does?
                     let unitImg = span.firstChild;
