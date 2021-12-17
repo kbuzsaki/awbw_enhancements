@@ -75,6 +75,7 @@
                         // Make sure that the unit's image reflects its waited state.
                         let fixedUnitImgSrc = getUrlWithWaitedState(unitImg.src, unit.moved);
                         if (unitImg.src !== fixedUnitImgSrc) {
+                            console.log("Patching unit sprite waitedness:", unit);
                             unitImg.src = fixedUnitImgSrc;
                         }
                     }
@@ -134,9 +135,11 @@
                             if (buildingElement) {
                                 let img = buildingElement.firstChild;
                                 if (img && img.src && isHidableInFog(img.src)) {
-                                    console.log("Patching building that should be in fog:", building);
                                     let fixedImgSrc = getUrlWithWaitedState(img.src, /*waited=*/true);
-                                    img.src = fixedImgSrc;
+                                    if (img.src !== fixedImgSrc) {
+                                        console.log("Patching building that should be in fog:", building);
+                                        img.src = fixedImgSrc;
+                                    }
                                 }
                             }
                         }
