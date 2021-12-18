@@ -220,14 +220,35 @@ OptionsReader.instance().onOptionsReady((options) => {
             let buildingsInfo = scrapeBuildingsInfo();
 
             let mergedTerrainInfo = undefined;
-            if (terrainInfo && buildingsInfo) {
-                mergedTerrainInfo = mergeMatrices(terrainInfo, buildingsInfo);
-            } else {
+            if (!terrainInfo || !buildingsInfo) {
                 console.log("Failed to load one of terrainInfo:", terrainInfo, "or buildingsInfo:", buildingsInfo);
-                var urlParams = new URLSearchParams(window.location.search);
+            } else {
+                let merged = mergeMatrices(terrainInfo, buildingsInfo);
+                if (matrixHasHoles(merged)) {
+                    console.log("Merged terrainInfo had holes, refusing to use it:", merged);
+                } else {
+                    console.log("Loaded merged terrain info from page:", merged);
+                    mergedTerrainInfo = merged;
+                }
+            }
+
+            // TODO: handling for broken pipe seams
+            if (!mergedTerrainInfo) {
+                let urlParams = new URLSearchParams(window.location.search);
+                let mapsId = undefined;
                 if (urlParams.has("maps_id")) {
+                    mapsId = parseInt(urlParams.get("maps_id"));
+                    console.log("Got maps_id from URL:", mapsId);
+                } else {
+                    let mapsIdInput = document.querySelector("input[name=maps_id]");
+                    if (mapsIdInput && !isNaN(parseInt(mapsIdInput.value))) {
+                        mapsId = parseInt(mapsIdInput.value);
+                        console.log("Got maps_id from form input:", mapsId);
+                    }
+                }
+
+                if (mapsId) {
                     console.log("Falling back to fetching map text.");
-                    let mapsId = parseInt(urlParams.get("maps_id"));
                     mergedTerrainInfo = await fetchTerrainInfo(mapsId);
                 } else {
                     reportError("Couldn't find maps_id, failed to fetch map data.");
