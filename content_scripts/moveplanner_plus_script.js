@@ -257,7 +257,6 @@ OptionsReader.instance().onOptionsReady((options) => {
 
             if (mergedTerrainInfo) {
                 let rangePreview = new MoveRangePreview(gamemap, mergedTerrainInfo, players);
-                rangePreview.updateMoveRange([]);
                 parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
             }
         }
