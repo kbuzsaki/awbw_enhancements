@@ -9,7 +9,7 @@ function classifyDownload(downloadItem) {
 }
 
 // Use onDeterminingFilename rather than onCreated so that we can get the filename
-chrome.downloads.onDeterminingFilename.addListener((downloadItem) => {
+chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
     chrome.storage.sync.get({
         options_enable_moveplanner_plus: true,
         options_enable_savestate_interception: true
@@ -17,6 +17,7 @@ chrome.downloads.onDeterminingFilename.addListener((downloadItem) => {
         console.log("interceptor with options", result, "inspecting download", downloadItem);
         if (!result.options_enable_moveplanner_plus
          || !result.options_enable_savestate_interception) {
+            suggest();
             return;
         }
 
@@ -26,9 +27,13 @@ chrome.downloads.onDeterminingFilename.addListener((downloadItem) => {
             // It's a savestate download that wasn't triggered by us, so cancel it
             console.log("Canceling unidentified savestate download");
             chrome.downloads.cancel(downloadItem.id);
+            suggest();
         } else {
             // Ignore, it's either not a savestate or it's the final modified data to download
             console.log("*** NOT intercepting download:", downloadItem);
+            suggest();
         }
     });
+
+    return true;
 });
