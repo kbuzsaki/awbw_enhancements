@@ -153,12 +153,17 @@ function injectRequestedScripts(options, done) {
     snapshotElement.id = "awbw_helper-savestate-snapshot";
     document.body.appendChild(snapshotElement);
 
+    let requestElement = document.createElement("div");
+    requestElement.id = "awbw_helper-playersInfo-patch";
+    document.body.appendChild(requestElement);
+
     // TODO: add settings for controlling which patches are injected?
     let scripts = [];
     if (options.options_enable_savestate_interception) {
         scripts.push("/res/savestate_injector.js");
     }
     scripts.push("/res/unitsinfo_patcher.js#" + JSON.stringify(options));
+    scripts.push("/res/playersinfo_patcher.js");
     console.log("Injecting requested scripts:", scripts);
 
     function injectScript(scriptName, onload) {
