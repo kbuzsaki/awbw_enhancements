@@ -169,6 +169,15 @@ let kKeyboardOptionsMapping = [
         description: [
             `Keyboard shortcut for toggling the Damage Calculator. Also works on the game page.`,
         ],
+    }, {
+        id: "hold-quick-move-range-preview",
+        name: "options_bindings_hold_quick_move_range_preview",
+        default: [16 /*left shift*/],
+        // TODO: fix this formatting on the options page
+        label: "Quick Move Range Preview",
+        description: [
+            `Keyboard shortcut to hold for "quick move range preview", without having to select the unit.`,
+        ],
     },
 ];
 

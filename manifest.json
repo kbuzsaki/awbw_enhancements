@@ -40,6 +40,7 @@
                 "lib/profile_settings_reader.js",
                 "lib/game_state_parser.js",
                 "lib/build_menu_listener.js",
+                "lib/cursor_tracker.js",
                 "lib/move_range_preview.js",
                 "lib/player_panel.js",
                 "lib/players_panel.js",

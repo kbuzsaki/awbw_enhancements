@@ -256,8 +256,10 @@ OptionsReader.instance().onOptionsReady((options) => {
             }
 
             if (mergedTerrainInfo) {
+                let cursorTracker = new CursorTracker(options);
                 let rangePreview = new MoveRangePreview(gamemap, mergedTerrainInfo, players);
                 parser.addListener(rangePreview.onMapUpdate.bind(rangePreview));
+                cursorTracker.addCursorUpdateListener(rangePreview.onCursorUpdate.bind(rangePreview));
             }
         }
 
