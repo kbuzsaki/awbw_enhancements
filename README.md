@@ -21,3 +21,6 @@ Its current functionality includes:
     5. The visual bug where black boat sprites break when a savestate is uploaded.
 
 Feel free to request additional functionality via a github issue or by contacting me (saltor#4306) in the AWBW discord :)
+
+Here's an example of what the moveplanner looks like with AWBW Helper enabled:
+![screenshot of moveplanner plus](res/images/demo_screenshot_1.png)
