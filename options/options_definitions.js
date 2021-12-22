@@ -173,10 +173,17 @@ let kKeyboardOptionsMapping = [
         id: "hold-quick-move-range-preview",
         name: "options_bindings_hold_quick_move_range_preview",
         default: [16 /*left shift*/],
-        // TODO: fix this formatting on the options page
-        label: "Quick Move Range Preview",
+        label: "Quick Move Range",
         description: [
             `Keyboard shortcut to hold for "quick move range preview", without having to select the unit.`,
+        ],
+    }, {
+        id: "hold-quick-attack-range-preview",
+        name: "options_bindings_hold_quick_attack_range_preview",
+        default: [17 /*left control*/],
+        label: "Quick Attack Range",
+        description: [
+            `Keyboard shortcut to hold for "quick attack range preview", without having to select the unit.`,
         ],
     },
 ];
