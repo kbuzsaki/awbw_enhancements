@@ -172,7 +172,7 @@ let kKeyboardOptionsMapping = [
     }, {
         id: "hold-quick-move-range-preview",
         name: "options_bindings_hold_quick_move_range_preview",
-        default: [16 /*left shift*/],
+        default: [16 /*shift*/],
         label: "Quick Move Range",
         description: [
             `Keyboard shortcut to hold for "quick move range preview", without having to select the unit.`,
@@ -180,7 +180,7 @@ let kKeyboardOptionsMapping = [
     }, {
         id: "hold-quick-attack-range-preview",
         name: "options_bindings_hold_quick_attack_range_preview",
-        default: [17 /*left control*/],
+        default: [17 /*control*/, 191 /*forward slash*/],
         label: "Quick Attack Range",
         description: [
             `Keyboard shortcut to hold for "quick attack range preview", without having to select the unit.`,
