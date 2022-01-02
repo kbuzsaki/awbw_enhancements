@@ -93,7 +93,6 @@ async function getInitialPlayerState(options, mapEntities) {
                 }
             }
         }
-        // TODO: load data from load_replay.php if it's not available?
         // TODO: add better handling for if playerInfo is incomplete.
         if (latestPlayer === undefined) {
             latestPlayer = players[0];
@@ -130,10 +129,6 @@ async function getInitialPlayerState(options, mapEntities) {
 }
 
 // TODO: support for "undo"
-// TODO: better support for sonja somehow? at least bugfixing NaNs and broken images
-// TODO: broken snapshot for fog?
-// TODO: "reinforcement time heat map" for different movement types
-
 
 function injectRequestedStyles(options) {
     if (options.options_menu_opacity === 1) {
@@ -157,7 +152,6 @@ function injectRequestedScripts(options, done) {
     requestElement.id = "awbw_helper-playersInfo-patch";
     document.body.appendChild(requestElement);
 
-    // TODO: add settings for controlling which patches are injected?
     let scripts = [];
     if (options.options_enable_savestate_interception) {
         scripts.push("/res/savestate_injector.js");
