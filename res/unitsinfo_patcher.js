@@ -30,6 +30,14 @@
                     console.log("patching units_players_id for unit:", unit);
                     unit.units_players_id = unit.players_id;
                 }
+
+                // Tack this fix onto the players id option because units built in the vanilla move planner
+                // aren't selectable in the first place, so this fix is only revealed then.
+                if (!unit.hasOwnProperty("units_ammo")) {
+                    console.log("patching units_ammo for unit:", unit);
+                    // The actual ammo value doesn't matter as long as it's not zero.
+                    unit.units_ammo = 1;
+                }
             }
 
             if (options.options_enable_bugfix_unwait_all) {
