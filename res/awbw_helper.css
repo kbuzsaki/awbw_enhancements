@@ -167,6 +167,10 @@
     overflow-y: auto;
 }
 
+.awbwhelper-sidebar-contents {
+    position: absolute;
+}
+
 .awbwhelper-sidebar-entry {
     margin-left: 10px;
     margin-bottom: 5px;
