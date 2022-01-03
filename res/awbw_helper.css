@@ -195,3 +195,7 @@
 }
 .awbwhelper-player-bar {
 }
+
+.awbwhelper-player-funds-container {
+    cursor: pointer;
+}
