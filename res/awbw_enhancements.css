@@ -162,13 +162,25 @@
 }
 
 
-.awbwenhancements-sidebar-container {
+/* the outer container exists to participate in flexbox layout with the right dimensions */
+.awbwenhancements-sidebar-outer-container {
     height: 896px;
+    width: 210px;
+}
+
+/* the inner container uses position absolute and a fixed width that is larger than the expected
+ * content size so that we get a y scrollbar without an x scrollbar.
+ */
+.awbwenhancements-sidebar-inner-container {
+    position: absolute;
+    height: 896px;
+    width: 360px;
     overflow-y: auto;
 }
 
+/* the contents wrapper then actually contains the content */
 .awbwenhancements-sidebar-contents {
-    position: absolute;
+    width: fit-content;
 }
 
 .awbwenhancements-sidebar-entry {
