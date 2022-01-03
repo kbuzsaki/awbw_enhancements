@@ -40,9 +40,9 @@ let kCheckOptionsMapping = [
         label: "Enable Enhanced Savestates",
         description: [
             `This option enables the in-page "snapshot and restore" feature that lets you make quick ` +
-            `savestates without downloading a savestate file. It also adds AWBW Helper's extra data ` +
+            `savestates without downloading a savestate file. It also adds AWBW Enhancements' extra data ` +
             `like current funds to savestates that you download.`,
-            `Disabling this feature will stop AWBW Helper from tampering with savestate downloads. ` +
+            `Disabling this feature will stop AWBW Enhancements from tampering with savestate downloads. ` +
             `This is an escape hatch in case future AWBW updates temporarily break the snapshot feature.`,
         ],
     }, {

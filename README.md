@@ -1,6 +1,6 @@
-# AWBW Helper
+# AWBW Enhancements
 
-"AWBW Helper" is a chrome extension that adds some extra functionality to
+"AWBW Enhancements" is a chrome extension that adds some extra functionality to
 [Advance Wars By Web](https://awbw.amarriner.com). You can install it from the Chrome Web Store
 [here](https://chrome.google.com/webstore/detail/awbw-helper/cnkhdcnafdfffpkbbbeghbdjkabhbkfi).
 
@@ -22,5 +22,5 @@ Its current functionality includes:
 
 Feel free to request additional functionality via a github issue or by contacting me (saltor#4306) in the AWBW discord :)
 
-Here's an example of what the moveplanner looks like with AWBW Helper enabled:
+Here's an example of what the moveplanner looks like with AWBW Enhancements enabled:
 ![screenshot of moveplanner plus](res/images/demo_screenshot_1.png)
