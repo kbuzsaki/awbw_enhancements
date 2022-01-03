@@ -27,7 +27,8 @@ chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
             // It's a savestate download that wasn't triggered by us, so cancel it
             console.log("Canceling unidentified savestate download");
             chrome.downloads.cancel(downloadItem.id);
-            suggest();
+            // Never call suggest() because we intentionally cancel this download.
+            // Empirically it seems like calling suggest here can result in the sometimes starting in the browser?
         } else {
             // Ignore, it's either not a savestate or it's the final modified data to download
             console.log("*** NOT intercepting download:", downloadItem);
