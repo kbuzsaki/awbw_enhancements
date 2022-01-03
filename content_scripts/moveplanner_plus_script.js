@@ -145,11 +145,11 @@ function injectRequestedStyles(options) {
 
 function injectRequestedScripts(options, done) {
     let snapshotElement = document.createElement("div");
-    snapshotElement.id = "awbw_helper-savestate-snapshot";
+    snapshotElement.id = "awbw_enhancements-savestate-snapshot";
     document.body.appendChild(snapshotElement);
 
     let requestElement = document.createElement("div");
-    requestElement.id = "awbw_helper-playersInfo-patch";
+    requestElement.id = "awbw_enhancements-playersInfo-patch";
     document.body.appendChild(requestElement);
 
     let scripts = [];

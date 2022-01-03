@@ -1,5 +1,5 @@
 (function(){
-    let snapshotElement = document.getElementById("awbw_helper-savestate-snapshot");
+    let snapshotElement = document.getElementById("awbw_enhancements-savestate-snapshot");
     if (!snapshotElement) {
         console.log("Couldn't find savestate snapshot element, aborting savestate injector monkey patching.");
         return;

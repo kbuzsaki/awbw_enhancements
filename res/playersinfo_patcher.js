@@ -1,5 +1,5 @@
 (function() {
-    let requestElement = document.getElementById("awbw_helper-playersInfo-patch");
+    let requestElement = document.getElementById("awbw_enhancements-playersInfo-patch");
     if (!requestElement) {
         console.log("playersInfo patcher failed to find request element! Aborting.");
         return;

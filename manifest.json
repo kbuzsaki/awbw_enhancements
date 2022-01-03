@@ -31,7 +31,7 @@
             ]
         }, {
             "matches": ["https://awbw.amarriner.com/moveplanner.php*"],
-            "css": ["res/awbw_helper.css"],
+            "css": ["res/awbw_enhancements.css"],
             "js": [
                 "lib/util.js",
                 "lib/game_data.js",

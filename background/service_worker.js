@@ -3,7 +3,7 @@ function classifyDownload(downloadItem) {
     let isSavestate = downloadItem.mime === "application/json"
                    && downloadItem.filename.endsWith("_moveplanner.json")
                    && downloadItem.finalUrl.startsWith("blob:");
-    let isModified = downloadItem.finalUrl.endsWith("#awbw_helper_modified");
+    let isModified = downloadItem.finalUrl.endsWith("#awbw_enhancements_modified");
 
     return {isSavestate, isModified};
 }
