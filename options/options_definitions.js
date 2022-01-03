@@ -16,9 +16,10 @@ let kCheckOptionsMapping = [
         description: [
             `Moveplanner Plus adds "player panels" with unit count, unit value, income, and funds to ` +
             `the moveplanner. It can also track funds over time by deducting funds when units are built ` +
-            `and adding funds income when you advance the turn.`,
-            `Moveplanner Plus currently does not track power bar charge, handle repairs, or correctly ` +
-            `account for units loaded in transports.`,
+            `and adding funds income when you advance the turn. It does not automatically handle repairs, ` +
+            `but you can manually edit your funds value by clicking on it.`,
+            `Moveplanner Plus currently does not track power bar charge or correctly account for units ` +
+            `loaded in transports. `,
             `Enabling Moveplanner Plus is required for all other features in this category, with the ` +
             `exception of certain bug fixes.`
         ],
@@ -29,7 +30,8 @@ let kCheckOptionsMapping = [
         default: true,
         label: "Enable Move Range Preview",
         description: [
-            `Adds a movement range preview when selecting units in the moveplanner.`,
+            `Adds a movement range preview when selecting units in the moveplanner. Also supports a "quick ` +
+            `preview" for movement range and attack range by holding a key while the cursor is over a unit.`,
             `Note that this preview does not take into account fuel consumption.`
         ],
     }, {
@@ -110,6 +112,7 @@ let kRangeOptionsMapping = [
     {
         id: "default-funding-range",
         previewId: "default-funding-preview",
+        requires: ["js-requires-moveplanner-plus"],
         name: "options_default_funding",
         default: 1000,
         min: 0,
@@ -123,7 +126,6 @@ let kRangeOptionsMapping = [
     }, {
         id: "menu-opacity-range",
         previewId: "menu-opacity-preview",
-        requires: ["js-requires-moveplanner-plus"],
         name: "options_menu_opacity",
         default: 0.75,
         min: 0.15,
@@ -183,7 +185,7 @@ let kKeyboardOptionsMapping = [
         default: [17 /*control*/, 191 /*forward slash*/],
         label: "Quick Attack Range",
         description: [
-            `Keyboard shortcut to hold for "quick attack range preview", without having to select the unit.`,
+            `Keyboard shortcut to hold for "quick attack range preview". Useful for showing indirect ranges.`,
         ],
     },
 ];
