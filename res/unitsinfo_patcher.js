@@ -80,8 +80,12 @@
                     // This feels janky, but it's what the moveplanner code does?
                     let unitImg = span.firstChild;
                     if (unitImg) {
+                        // Prefer unit.moved because it's the waited state used by the moveplanner, but fall
+                        // back to unit.units_moved because unit.moved may not be set.
+                        // (See the options_enable_bugfix_unwait_all patch above)
+                        let isWaited = unit.hasOwnProperty("moved") ? unit.moved : unit.units_moved;
                         // Make sure that the unit's image reflects its waited state.
-                        let fixedUnitImgSrc = getUrlWithWaitedState(unitImg.src, unit.moved);
+                        let fixedUnitImgSrc = getUrlWithWaitedState(unitImg.src, isWaited);
                         if (unitImg.src !== fixedUnitImgSrc) {
                             console.log("Patching unit sprite waitedness:", unit);
                             unitImg.src = fixedUnitImgSrc;
