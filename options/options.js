@@ -369,9 +369,15 @@ initializeKeyboardOptions();
 chrome.storage.sync.get(kOptionDefaults, (result) => {
     setOptionsOnPage(result);
 
+    // TODO: generalize this
     let moveplannerPlusChildOptions = document.getElementsByClassName("js-requires-moveplanner-plus");
     for (let childOption of moveplannerPlusChildOptions) {
         childOption.disabled = !result.options_enable_moveplanner_plus;
+    }
+
+    let speedyEventPanelChildOptions = document.getElementsByClassName("js-requires-speedy-event-panel");
+    for (let childOption of speedyEventPanelChildOptions) {
+        childOption.disabled = !result.options_enable_speedy_event_panel;
     }
 
     let inputs = document.querySelectorAll("input");
@@ -384,6 +390,11 @@ chrome.storage.sync.get(kOptionDefaults, (result) => {
             let moveplannerPlusDisabled = !parsedOptions.options_enable_moveplanner_plus;
             for (let childOption of moveplannerPlusChildOptions) {
                 childOption.disabled = moveplannerPlusDisabled;
+            }
+
+            let speedyEventPanelDisabled = !parsedOptions.options_enable_speedy_event_panel;
+            for (let childOption of speedyEventPanelChildOptions) {
+                childOption.disabled = speedyEventPanelDisabled;
             }
         });
     }

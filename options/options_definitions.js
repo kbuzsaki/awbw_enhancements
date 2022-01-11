@@ -1,5 +1,13 @@
 let kCheckOptionsMapping = [
     {
+        id: "enable-speedy-event-panel",
+        name: "options_enable_speedy_event_panel",
+        default: false,
+        label: "Enable Event Banner Speedup",
+        description: [
+            ``,
+        ],
+    }, {
         id: "enable-replay-shortcuts",
         name: "options_enable_replay_shortcuts",
         default: true,
@@ -110,6 +118,21 @@ let kCheckOptionsMapping = [
 
 let kRangeOptionsMapping = [
     {
+        id: "event-panel-speed-range",
+        previewId: "event-panel-speed-preview",
+        requires: ["js-requires-speedy-event-panel"],
+        name: "options_event_panel_speed_ms",
+        default: 5000,
+        min: 500,
+        max: 5000,
+        step: 50,
+        label: "Event Banner Speed (ms)",
+        description: [
+            `The time (in milliseconds) to display the "event banner" in games and replays. The event banner ` +
+            `announces when a turn ends, when a player activates a power, and when a player resigns or is ` +
+            `defeated. The default value is 5 seconds, but you can shorten it here if you find it to be too long.`,
+        ],
+    }, {
         id: "default-funding-range",
         previewId: "default-funding-preview",
         requires: ["js-requires-moveplanner-plus"],

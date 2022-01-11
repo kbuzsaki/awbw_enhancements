@@ -27,7 +27,8 @@
                 "options/options_definitions.js",
                 "lib/options_reader.js",
                 "content_scripts/toggle_calculator_shortcut_script.js",
-                "content_scripts/replay_shortcuts_script.js"
+                "content_scripts/replay_shortcuts_script.js",
+                "content_scripts/speedy_event_panel_script.js"
             ]
         }, {
             "matches": ["https://awbw.amarriner.com/moveplanner.php*"],
