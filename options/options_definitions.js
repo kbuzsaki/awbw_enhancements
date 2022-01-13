@@ -4,6 +4,7 @@ let kCheckOptionsMapping = [
         name: "options_enable_speedy_event_panel",
         default: false,
         label: "Enable Event Banner Speedup",
+        // TODO: avoid the extra margin bump when the description is empty
         description: [
             ``,
         ],
