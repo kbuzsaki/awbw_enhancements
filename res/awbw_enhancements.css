@@ -212,6 +212,18 @@
     cursor: pointer;
 }
 
+.awbwenhancements-player-funds-container:hover .hover-text {
+    visibility: visible;
+}
+
+.awbwenhancements-player-funds-display {
+    position: absolute;
+    right: -40px;
+    top: 100%;
+    transform-origin: top left;
+    width: 160px;
+}
+
 .awbwenhancements-range-tile {
     border-style: solid;
     border-width: 1px;
