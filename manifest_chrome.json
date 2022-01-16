@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "host_permissions": [
+        "https://awbw.amarriner.com/*"
+    ],
+    "web_accessible_resources": [
+        {
+            "matches": ["https://awbw.amarriner.com/*"],
+            "resources": [
+                "/res/playersinfo_patcher.js",
+                "/res/savestate_injector.js",
+                "/res/unitsinfo_patcher.js"
+            ]
+        }
+    ]
+}

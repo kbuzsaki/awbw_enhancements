@@ -1,0 +1,13 @@
+{
+    "manifest_version": 2,
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{8a19e478-4d8f-4375-b3dc-1102abcfd2c8}"
+        }
+    },
+    "web_accessible_resources": [
+        "/res/playersinfo_patcher.js",
+        "/res/savestate_injector.js",
+        "/res/unitsinfo_patcher.js"
+    ]
+}
