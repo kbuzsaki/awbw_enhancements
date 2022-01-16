@@ -3,11 +3,7 @@
     "description": "Replay keyboard shortcuts and moveplanner enhancements for Advance Wars By Web.",
     "version": "2022.1.10.0",
     "manifest_version": 3,
-    "background": {
-        "service_worker": "background/service_worker.js"
-    },
     "permissions": [
-        "downloads",
         "storage"
     ],
     "host_permissions": [
