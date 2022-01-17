@@ -9,10 +9,10 @@ OptionsReader.instance().onOptionsReady((options) => {
         let speedSeconds = speedMs / 1000;
 
         let s = document.createElement("style");
-        s.innerHTML = `
+        s.appendChild(document.createTextNode(`
         .event-screen-open {
             animation: anim-open-event-screen ${speedSeconds}s linear forwards;
-        }`;
+        }`));
         (document.head || document.documentElement).appendChild(s);
 
         return s;

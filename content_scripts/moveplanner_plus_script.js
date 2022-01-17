@@ -136,10 +136,10 @@ function injectRequestedStyles(options) {
     }
 
     let s = document.createElement("style");
-    s.innerHTML = `
+    s.appendChild(document.createTextNode(`
     #options-menu, #build-menu {
       opacity: ${options.options_menu_opacity};
-    }`;
+    }`));
     (document.head || document.documentElement).appendChild(s);
 }
 
