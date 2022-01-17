@@ -211,3 +211,9 @@
 .awbwenhancements-player-funds-container {
     cursor: pointer;
 }
+
+.awbwenhancements-range-tile {
+    border-style: solid;
+    border-width: 1px;
+    pointer-events: none;
+}
