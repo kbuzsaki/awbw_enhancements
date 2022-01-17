@@ -214,7 +214,7 @@ function templateCheckboxOption(mapping) {
 function initializeCheckboxOptions() {
     for (let optionMapping of kCheckOptionsMapping) {
         let container = document.getElementById(optionMapping.id + "-container");
-        container.innerHTML = templateCheckboxOption(optionMapping);
+        container.innerHTML = DOMPurify.sanitize(templateCheckboxOption(optionMapping));
     }
 }
 
@@ -242,7 +242,7 @@ function templateRangeOption(mapping) {
 function initializeRangeOptions() {
     for (let optionMapping of kRangeOptionsMapping) {
         let container = document.getElementById(optionMapping.id + "-container");
-        container.innerHTML = templateRangeOption(optionMapping);
+        container.innerHTML = DOMPurify.sanitize(templateRangeOption(optionMapping));
 
         let inputElement = document.getElementById(optionMapping.id);
         let previewElement = document.getElementById(optionMapping.previewId);
@@ -278,7 +278,7 @@ function initializeKeyboardOptions() {
     let keybindListener = new KeybindListener("keybinding-modal");
     for (let optionMapping of kKeyboardOptionsMapping) {
         let container = document.getElementById(optionMapping.id + "-container");
-        container.innerHTML = templateKeyboardOption(optionMapping);
+        container.innerHTML = DOMPurify.sanitize(templateKeyboardOption(optionMapping));
 
         for (let i = 1; i <= kMaxKeyboardBindings; i++) {
             let inputId = optionMapping.id + "-" + i;

@@ -29,6 +29,7 @@
             "matches": ["https://awbw.amarriner.com/moveplanner.php*"],
             "css": ["res/awbw_enhancements.css"],
             "js": [
+                "vendor/purify.min.js",
                 "lib/util.js",
                 "lib/game_data.js",
                 "options/options_definitions.js",
