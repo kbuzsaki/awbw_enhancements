@@ -130,7 +130,7 @@ let kRangeOptionsMapping = [
         description: [
             `The time (in milliseconds) to display the "event banner" in games and replays. The event banner ` +
             `announces when a turn ends, when a player activates a power, and when a player resigns or is ` +
-            `defeated. The default value is 5 seconds, but you can shorten it here if you find it to be too long.`,
+            `defeated. AWBW's default value is 5 seconds, but you can shorten it here if you find it to be too long.`,
         ],
     }, {
         id: "default-funding-range",
