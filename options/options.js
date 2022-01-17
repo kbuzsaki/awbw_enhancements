@@ -126,8 +126,8 @@ class KeybindListener {
         let name = this.currentOption.name;
         let currentKey = this.currentOption.input.value || "None";
         let spans = this.modalElement.querySelectorAll(".modal-body span");
-        spans[0].innerHTML = name;
-        spans[1].innerHTML = currentKey;
+        spans[0].innerText = name;
+        spans[1].innerText = currentKey;
 
         this.modal.show();
     }
