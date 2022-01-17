@@ -272,12 +272,6 @@ OptionsReader.instance().onOptionsReady((options) => {
             playersPanel.addTurnStartListener(savestateManager.onTurnStart.bind(savestateManager));
         }
 
-        // TODO: determine whether having no throttle rate is acceptable now that we ignore
-        // cursor events and only run on the moveplanner.
-        let throttleMs = 0;
-        let throttler = new UpdateThrottler(throttleMs, () => {
-            parser.handleMapUpdate();
-        });
         let observer = new MutationObserver((mutations, observer) => {
             // Ignore cursor-only mutations, they can't affect game state.
             let isInteresting = false;
@@ -289,13 +283,13 @@ OptionsReader.instance().onOptionsReady((options) => {
             }
 
             if (isInteresting) {
-                throttler.handleUpdate();
+                parser.handleMapUpdate();
             }
         });
         observer.observe(gamemap, {subtree: true, childList: true, attributes: true});
 
-        // Initial ping to grab state if there are no other events
-        throttler.handleUpdate();
+        // Grab initial state to initialize stuff
+        parser.handleMapUpdate();
 
         playersPanel.startFirstTurn();
     });
