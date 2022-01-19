@@ -3,7 +3,8 @@
     "description": "Replay keyboard shortcuts and moveplanner enhancements for Advance Wars By Web.",
     "version": "2022.1.16.0",
     "permissions": [
-        "storage"
+        "storage",
+        "downloads"
     ],
     "icons": {
         "16": "/res/images/fighter_icon16.png",

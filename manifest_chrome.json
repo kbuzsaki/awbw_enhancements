@@ -1,5 +1,8 @@
 {
     "manifest_version": 3,
+    "background": {
+        "service_worker": "background/service_worker.js"
+    },
     "host_permissions": [
         "https://awbw.amarriner.com/*"
     ],
