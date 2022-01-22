@@ -11,15 +11,47 @@ function getGameId(item) {
     return undefined;
 }
 
+function fetchReplayState(gameId) {
+    return fetch("https://awbw.amarriner.com/api/game/load_replay.php", {
+        method: "POST",
+        body: JSON.stringify({
+            gameId: gameId,
+            turn: 1,
+            initial: false,
+        }),
+    }).then((resp) => {
+        return resp.json();
+    });
+}
+
+function fetchMapName(gameId) {
+    let gameUrl = new URL("https://awbw.amarriner.com/2030.php");
+    gameUrl.search = new URLSearchParams({games_id: gameId});
+
+    return fetch(gameUrl).then((resp) => {
+        return resp.text();
+    }).then((html) => {
+        // DOMParser isn't available in service workers, but the map link is easy enough to find
+        let matches = html.match(/prevmaps\.php\?maps_id=\d+">([^<]+)</);
+        if (matches.length > 1) {
+            return matches[1];
+        }
+        console.log("Failed to find map name for game", gameId);
+        return "";
+    });
+}
+
 chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
     chrome.storage.sync.get({
-        // TODO: option
-        options_enable_savestate_interception: true
+        options_enable_automatic_replay_renaming: false
     }, (result) => {
-        console.log("interceptor with options", result, "inspecting download", downloadItem);
+        if (!result.options_enable_automatic_replay_renaming) {
+            console.log("Automatic replay renaming disabled:", result, ", ignoring download:", downloadItem);
+            return;
+        }
+        console.log("Renamer with options", result, "inspecting download", downloadItem);
 
         if (!isReplayDownload(downloadItem)) {
-            // Ignore, it's either not a savestate or it's the final modified data to download
             console.log("*** NOT renaming download:", downloadItem);
             suggest();
             return;
@@ -31,26 +63,29 @@ chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
             suggest();
             return;
         }
-        console.log("got game id:", gameId);
+        console.log("Renaming replay with game id:", gameId);
 
-        fetch("https://awbw.amarriner.com/api/game/load_replay.php", {
-            method: "POST",
-            body: JSON.stringify({
-                gameId: gameId,
-                turn: 1,
-                initial: false,
-            }),
-        }).then((resp) => {
-            return resp.json();
-        }).then((json) => {
-            // TODO: add map name
-            let players = json.gameState.players;
+        Promise.all([
+            fetchMapName(gameId),
+            fetchReplayState(gameId)
+        ]).then(([
+            gameName,
+            replayState
+        ]) => {
+            let nameComponents = ["" + gameId];
 
-            let playerStrs = Object.values(players).map((player) => {
+            if (gameName && gameName !== "") {
+                nameComponents.push(gameName);
+            }
+
+            let players = replayState.gameState.players;
+            let playerStr = Object.values(players).map((player) => {
                 return player.users_username + " (" + player.co_name + ")";
-            });
+            }).join(" vs ");
 
-            let filename = "" + gameId + " - " + playerStrs.join(" vs ") + ".zip";
+            nameComponents.push(playerStr);
+
+            let filename = nameComponents.join(" - ") + ".zip";
             suggest({filename});
         }).catch((e) => {
             console.log("Encountered error while loading player data for replay download:", e);

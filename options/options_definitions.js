@@ -9,6 +9,18 @@ let kCheckOptionsMapping = [
             ``,
         ],
     }, {
+        id: "enable-automatic-replay-renaming",
+        name: "options_enable_automatic_replay_renaming",
+        requires: ["js-requires-chrome"],
+        default: false,
+        label: "Enable Automatic Replay Renaming",
+        description: [
+            `Automatic Replay Renaming gives replays you download a more descriptive filename that ` +
+            `includes the map, players, and COs used. This feature is a work in progress, so please give feedback :)`,
+            `The naming format is "game_id - map_name - player (CO) vs player (CO).zip".`,
+            `This feature is not supported in Firefox due to browser limitations.`
+        ],
+    }, {
         id: "enable-replay-shortcuts",
         name: "options_enable_replay_shortcuts",
         default: true,

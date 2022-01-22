@@ -1,5 +1,9 @@
 {
     "manifest_version": 3,
+    "permissions": [
+        "storage",
+        "downloads"
+    ],
     "background": {
         "service_worker": "background/service_worker.js"
     },

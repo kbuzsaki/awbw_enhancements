@@ -288,6 +288,7 @@ function initializeKeyboardOptions() {
 }
 
 function setOptionsOnPage(options) {
+    console.log("Setting options:", options);
     for (let optionMapping of kCheckOptionsMapping) {
         if (options.hasOwnProperty(optionMapping.name)) {
             let inputElement = document.getElementById(optionMapping.id);
@@ -368,6 +369,15 @@ initializeKeyboardOptions();
 
 chrome.storage.sync.get(kOptionDefaults, (result) => {
     setOptionsOnPage(result);
+
+    let isFirefox = chrome.runtime.getManifest().browser_specific_settings?.hasOwnProperty("gecko");
+    console.log("is firefox:", isFirefox);
+    if (isFirefox) {
+        let chromeOnlyOptions = document.getElementsByClassName("js-requires-chrome");
+        for (let childOption of chromeOnlyOptions) {
+            childOption.disabled = true;
+        }
+    }
 
     // TODO: generalize this
     let moveplannerPlusChildOptions = document.getElementsByClassName("js-requires-moveplanner-plus");
