@@ -128,6 +128,49 @@ async function getInitialPlayerState(options, mapEntities) {
     return players;
 }
 
+async function getMergedTerrainInfo() {
+    let terrainInfo = scrapeTerrainInfo();
+    let buildingsInfo = scrapeBuildingsInfo();
+
+    let mergedTerrainInfo = undefined;
+    if (!terrainInfo || !buildingsInfo) {
+        console.log("Failed to load one of terrainInfo:", terrainInfo, "or buildingsInfo:", buildingsInfo);
+    } else {
+        let merged = mergeMatrices(terrainInfo, buildingsInfo);
+        if (matrixHasHoles(merged)) {
+            console.log("Merged terrainInfo had holes, refusing to use it:", merged);
+        } else {
+            console.log("Loaded merged terrain info from page:", merged);
+            mergedTerrainInfo = merged;
+        }
+    }
+
+    // TODO: handling for broken pipe seams
+    if (!mergedTerrainInfo) {
+        let urlParams = new URLSearchParams(window.location.search);
+        let mapsId = undefined;
+        if (urlParams.has("maps_id")) {
+            mapsId = parseInt(urlParams.get("maps_id"));
+            console.log("Got maps_id from URL:", mapsId);
+        } else {
+            let mapsIdInput = document.querySelector("input[name=maps_id]");
+            if (mapsIdInput && !isNaN(parseInt(mapsIdInput.value))) {
+                mapsId = parseInt(mapsIdInput.value);
+                console.log("Got maps_id from form input:", mapsId);
+            }
+        }
+
+        if (mapsId) {
+            console.log("Falling back to fetching map text.");
+            mergedTerrainInfo = await fetchTerrainInfo(mapsId);
+        } else {
+            reportError("Couldn't find maps_id, failed to fetch map data.");
+        }
+    }
+
+    return mergedTerrainInfo;
+}
+
 // TODO: support for "undo"
 
 function injectRequestedStyles(options) {
@@ -215,45 +258,7 @@ OptionsReader.instance().onOptionsReady((options) => {
         });
 
         if (options.options_enable_move_range_preview) {
-            let terrainInfo = scrapeTerrainInfo();
-            let buildingsInfo = scrapeBuildingsInfo();
-
-            let mergedTerrainInfo = undefined;
-            if (!terrainInfo || !buildingsInfo) {
-                console.log("Failed to load one of terrainInfo:", terrainInfo, "or buildingsInfo:", buildingsInfo);
-            } else {
-                let merged = mergeMatrices(terrainInfo, buildingsInfo);
-                if (matrixHasHoles(merged)) {
-                    console.log("Merged terrainInfo had holes, refusing to use it:", merged);
-                } else {
-                    console.log("Loaded merged terrain info from page:", merged);
-                    mergedTerrainInfo = merged;
-                }
-            }
-
-            // TODO: handling for broken pipe seams
-            if (!mergedTerrainInfo) {
-                let urlParams = new URLSearchParams(window.location.search);
-                let mapsId = undefined;
-                if (urlParams.has("maps_id")) {
-                    mapsId = parseInt(urlParams.get("maps_id"));
-                    console.log("Got maps_id from URL:", mapsId);
-                } else {
-                    let mapsIdInput = document.querySelector("input[name=maps_id]");
-                    if (mapsIdInput && !isNaN(parseInt(mapsIdInput.value))) {
-                        mapsId = parseInt(mapsIdInput.value);
-                        console.log("Got maps_id from form input:", mapsId);
-                    }
-                }
-
-                if (mapsId) {
-                    console.log("Falling back to fetching map text.");
-                    mergedTerrainInfo = await fetchTerrainInfo(mapsId);
-                } else {
-                    reportError("Couldn't find maps_id, failed to fetch map data.");
-                }
-            }
-
+            let mergedTerrainInfo = await getMergedTerrainInfo();
             if (mergedTerrainInfo) {
                 let cursorTracker = new CursorTracker(options);
                 let rangePreview = new MoveRangePreview(gamemap, mergedTerrainInfo, players);
