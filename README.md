@@ -1,8 +1,11 @@
 # AWBW Enhancements
 
-"AWBW Enhancements" is a chrome extension that adds some extra functionality to
-[Advance Wars By Web](https://awbw.amarriner.com). You can install it from the Chrome Web Store
-[here](https://chrome.google.com/webstore/detail/awbw-helper/cnkhdcnafdfffpkbbbeghbdjkabhbkfi).
+"AWBW Enhancements" is a browser extension that adds some extra functionality to
+[Advance Wars By Web](https://awbw.amarriner.com).
+
+You can install it for Chrome and Microsoft Edge (and other Chromium-based browsers) 
+[here](https://chrome.google.com/webstore/detail/awbw-helper/cnkhdcnafdfffpkbbbeghbdjkabhbkfi)
+and for Firefox [here](https://addons.mozilla.org/en-US/firefox/addon/awbw-enhancements/).
 
 Its current functionality includes:
 
@@ -20,7 +23,7 @@ Its current functionality includes:
     4. The visual bug where capture icons are displayed for infantry that have already finished capturing.
     5. The visual bug where black boat sprites break when a savestate is uploaded.
 
-Feel free to request additional functionality via a github issue or by contacting me (saltor#4306) in the AWBW discord :)
+Please feel free to report bugs or request new features via a github issue or by contacting me (saltor#4306) in the AWBW discord :)
 
 Here's an example of what the moveplanner looks like with AWBW Enhancements enabled:
 ![screenshot of moveplanner plus](docs/images/demo_screenshot_2.png)
